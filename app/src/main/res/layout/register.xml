@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <EditText
+            android:id="@+id/register_name"
+            android:hint="user_name"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <EditText
+            android:id="@+id/register_email"
+            android:hint="user_email"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <EditText
+            android:id="@+id/register_password"
+            android:hint="user_password"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+    />
+
+    <EditText
+            android:id="@+id/register_first"
+            android:hint="user_firs"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <EditText
+            android:id="@+id/register_last"
+            android:hint="user_last"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <EditText
+            android:id="@+id/register_middle"
+            android:hint="user_middle"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <EditText
+            android:id="@+id/register_role"
+            android:hint="user_role"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+    <EditText
+            android:id="@+id/register_class"
+            android:hint="user_class"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+    <Button
+            android:id="@+id/register_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:text="save"
+
+    ></Button>
+</LinearLayout>

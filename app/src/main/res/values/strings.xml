@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">lyceum-application-android-client</string>
+    <string name="title_home">Личный кабинет</string>
+    <string name="title_dashboard">Расписание</string>
+    <string name="title_notifications">Новости</string>
+    <string name="f_name">First Name</string>
+    <string name="l_name">Last Name</string>
+    <string name="save">Save</string>
+    <string name="show">Show</string>
+    <string name="empty"></string>
+</resources>
