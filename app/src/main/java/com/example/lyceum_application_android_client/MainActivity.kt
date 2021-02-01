@@ -11,7 +11,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login.*
-import kotlinx.android.synthetic.main.nav_menu.*
 import kotlinx.android.synthetic.main.register.*
 
 
@@ -23,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        // Session Manager
+        val context = applicationContext
+        val session = SessionManager(context);
 
         handler = DatabaseHelper(this)
 
@@ -46,7 +49,9 @@ class MainActivity : AppCompatActivity() {
 
         login_button.setOnClickListener() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
-                Toast.makeText(this, "login success!",  Toast.LENGTH_SHORT).show()
+                val name = login_name.text.toString()
+                session.createLoginSession("Username", name);
+                Toast.makeText(this, "login $name success!",  Toast.LENGTH_SHORT).show()
                 showMain()
             } else {
                 Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
