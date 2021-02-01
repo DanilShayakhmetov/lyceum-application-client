@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login.*
+import kotlinx.android.synthetic.main.nav_menu.*
 import kotlinx.android.synthetic.main.register.*
 
 
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         showHome()
 
         login.setOnClickListener() {
+            handler.insertSubjects()
             showLogin()
         }
 
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         login_button.setOnClickListener() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
                 Toast.makeText(this, "login success!",  Toast.LENGTH_SHORT).show()
-                showHome()
+                showMain()
             } else {
                 Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
                 showRegister()
@@ -65,18 +67,39 @@ class MainActivity : AppCompatActivity() {
     private fun showLogin() {
         login_layout.visibility= View.VISIBLE
         home_ll.visibility= View.GONE
+        navigation.visibility = View.GONE
     }
 
     private fun showRegister() {
         register_layout.visibility= View.VISIBLE
         home_ll.visibility= View.GONE
+        navigation.visibility = View.GONE
     }
 
     private fun showHome() {
         login_layout.visibility= View.GONE
         register_layout.visibility= View.GONE
         home_ll.visibility= View.VISIBLE
-        nav_view.visibility= View.VISIBLE
+        navigation.visibility = View.GONE
     }
+
+    private fun showMain() {
+        login_layout.visibility= View.GONE
+        register_layout.visibility= View.GONE
+        home_ll.visibility= View.GONE
+        navigation.visibility = View.VISIBLE
+    }
+
+    private fun showSchedule() {
+        register_layout.visibility= View.VISIBLE
+        home_ll.visibility= View.GONE
+        navigation.visibility = View.GONE}
+
+    private fun showNews() {
+        register_layout.visibility= View.VISIBLE
+        home_ll.visibility= View.GONE
+        navigation.visibility = View.GONE
+    }
+
 
 }
