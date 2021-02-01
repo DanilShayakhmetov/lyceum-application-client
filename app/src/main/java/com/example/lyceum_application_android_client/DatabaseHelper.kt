@@ -84,12 +84,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
     fun getUserByName(name: String) : Users {
         val db = writableDatabase
-        val query = "select * from $tableNameUser where $NAME = '$name';"
+        val query = "select * from $tableNameUser where $NAME = 'qwe';"
         var user = Users()
         val cursor = db.rawQuery(query, null)
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 user.id = cursor.getInt(cursor.getColumnIndex(ID))
+                user.userName = cursor.getString(cursor.getColumnIndex(NAME))
                 user.firstName = cursor.getString(cursor.getColumnIndex(FIRST_NAME))
                 user.lastName = cursor.getString(cursor.getColumnIndex(LAST_NAME))
                 user.middleName = cursor.getString(cursor.getColumnIndex(MIDDLE_NAME))
