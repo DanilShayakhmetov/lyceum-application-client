@@ -39,9 +39,7 @@ class HomeFragment : Fragment() {
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
             val root = inflater.inflate(R.layout.fragment_home, container, false)
             val textViewName: TextView = root.findViewById(R.id.text_name)
-            val textViewFirst: TextView = root.findViewById(R.id.text_firstName)
-            val textViewLast: TextView = root.findViewById(R.id.text_lastName)
-            val textViewMiddle: TextView = root.findViewById(R.id.text_middleName)
+            val textViewFull: TextView = root.findViewById(R.id.text_fullName)
             val textViewEmail: TextView = root.findViewById(R.id.text_email)
             val textViewClass: TextView = root.findViewById(R.id.text_Class_id)
 
@@ -49,13 +47,12 @@ class HomeFragment : Fragment() {
                 textViewName.text = user.userName
             })
             homeViewModel.first.observe(this, Observer {
-                textViewFirst.text = user.firstName
-            })
-            homeViewModel.last.observe(this, Observer {
-                textViewLast.text = user.lastName
-            })
-            homeViewModel.middle.observe(this, Observer {
-                textViewMiddle.text = user.middleName
+                textViewFull.text = user.lastName
+                    .plus(" ")
+                    .plus(user.firstName)
+                    .plus(" ")
+                    .plus(user.middleName)
+                    .plus(" ")
             })
             homeViewModel.classId.observe(this, Observer {
                 textViewClass.text = user.classId
@@ -70,16 +67,12 @@ class HomeFragment : Fragment() {
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
             val root = inflater.inflate(R.layout.fragment_home, container, false)
             val textViewName: TextView = root.findViewById(R.id.text_name)
-            val textViewFirst: TextView = root.findViewById(R.id.text_firstName)
-            val textViewLast: TextView = root.findViewById(R.id.text_lastName)
-            val textViewMiddle: TextView = root.findViewById(R.id.text_middleName)
+            val textViewFull: TextView = root.findViewById(R.id.text_fullName)
             val textViewEmail: TextView = root.findViewById(R.id.text_email)
             val textViewClass: TextView = root.findViewById(R.id.text_Class_id)
             homeViewModel.text.observe(this, Observer {
                 textViewName.text = user.userName
-                textViewFirst.text = user.firstName
-                textViewLast.text = user.lastName
-                textViewMiddle.text = user.middleName
+                textViewFull.text = user.userName
                 textViewEmail.text = user.email
                 textViewClass.text = user.classId
             })
