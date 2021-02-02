@@ -3,6 +3,7 @@ package com.example.lyceum_application_android_client.models
 class Users {
     var id: Int = 0;
     var userName = "";
+    var userImage = "";
     var email = "";
     var password = "";
     var classId = "";

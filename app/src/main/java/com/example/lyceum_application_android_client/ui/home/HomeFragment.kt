@@ -1,16 +1,20 @@
 package com.example.lyceum_application_android_client.ui.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.lyceum_application_android_client.DatabaseHelper
+import com.example.lyceum_application_android_client.MainActivity
 import com.example.lyceum_application_android_client.R
 import com.example.lyceum_application_android_client.SessionManager
 import com.example.lyceum_application_android_client.models.Users
@@ -29,9 +33,7 @@ class HomeFragment : Fragment() {
         val context = inflater.context
         val handler: DatabaseHelper = DatabaseHelper(context)
         val session = SessionManager(context);
-        super.onCreate(savedInstanceState)
-        val pref: SharedPreferences = session.pref
-        val name: String = pref.getString("username", "qwe").toString()
+        val name: String = session.userDetails.get("name").toString()
         var user = Users()
         user = handler.getUserByName(name)
         if (user.userName.isNotEmpty()) {
@@ -80,4 +82,5 @@ class HomeFragment : Fragment() {
         }
 
     }
+
 }

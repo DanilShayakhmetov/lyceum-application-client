@@ -5,7 +5,6 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
@@ -49,7 +48,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=""
                     android:textSize = "20dp"
                     android:textStyle="bold"/>
         </TableRow>
@@ -64,7 +62,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=""
                     android:textSize = "20dp"
                     android:textStyle="bold" />
 
@@ -80,15 +77,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=""
                     android:textSize = "20dp"
                     android:textStyle="bold"/>
         </TableRow>
+        <TableRow>
+            <Button
+                    android:id="@+id/img"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="img"
+            />
+        </TableRow>
+
     </TableLayout>
-
-
-
-
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

@@ -13,7 +13,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_USER_TABLE = "CREATE TABLE $tableNameUser " +
-                "($ID Integer PRIMARY KEY, $NAME TEXT, $EMAIL TEXT, $PASSWORD TEXT, $CLASS_ID INTEGER, " +
+                "($ID Integer PRIMARY KEY, $NAME TEXT, $IMG BLOB, $EMAIL TEXT, $PASSWORD TEXT, $CLASS_ID INTEGER, " +
                 "$ROLE TEXT, $LAST_NAME TEXT, $FIRST_NAME TEXT, $MIDDLE_NAME TEXT)"
 
         val CREATE_SCHEDULE_TABLE = "CREATE TABLE $tableNameSchedule " +
@@ -67,6 +67,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         values.put(LAST_NAME, last_name )
         values.put(MIDDLE_NAME, middle_name )
         db.insert(tableNameUser, null, values)
+        db.close()
+    }
+
+    fun createImage(name: String, image: String) {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        values.put(IMG, image)
+        db.update(tableNameUser, values, "name='$name'", null);
         db.close()
     }
 
@@ -233,6 +241,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         //users
         private const val NAME = "Name"
         private const val EMAIL = "Email"
+        private const val IMG = "Image"
         private const val PASSWORD = "Password"
         private const val ROLE = "Role"
         private const val LAST_NAME = "LastName"

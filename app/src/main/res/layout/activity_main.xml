@@ -32,6 +32,16 @@
                 android:layout_width="wrap_content"
                 android:text="register"
         />
+
+        <Button
+                android:id="@+id/img"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="img"
+        />
+
+
+
     </LinearLayout>
 
     <include
@@ -44,6 +54,12 @@
             android:id="@+id/register_layout"
             android:visibility="gone"
             layout="@layout/register"
+    />
+
+    <include
+            android:id="@+id/image_layout"
+            android:visibility="gone"
+            layout="@layout/image"
     />
 
     <include

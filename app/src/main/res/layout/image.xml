@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+>
+
+    <!--ImageView in which image will be set-->
+    <ImageView
+            android:id="@+id/image_view"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="centerCrop"
+            android:layout_width="400dp"
+            android:layout_height="400dp" />
+
+    <!--Button to open camera-->
+    <Button
+            android:id="@+id/capture_btn"
+            android:text="Создать аватар"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <Button
+            android:id="@+id/save_cont_btn"
+            android:text="сохраненить и продолжить"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+</LinearLayout>
