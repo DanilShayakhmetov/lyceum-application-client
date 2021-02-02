@@ -80,17 +80,19 @@
                     android:textSize = "20dp"
                     android:textStyle="bold"/>
         </TableRow>
-        <TableRow>
-            <Button
-                    android:id="@+id/img"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="img"
-            />
-        </TableRow>
-
+        <Button
+                android:id="@+id/img_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="img"
+        />
     </TableLayout>
 
+    <include
+            android:id="@+id/image_layout"
+            android:visibility="gone"
+            layout="@layout/image"
+    />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
