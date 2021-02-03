@@ -1,16 +1,8 @@
 package com.example.lyceum_application_android_client
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ContentValues
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,9 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.lyceum_application_android_client.models.Users
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
 

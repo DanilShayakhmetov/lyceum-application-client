@@ -46,8 +46,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.execSQL(CREATE_CLASS_TABLE)
         db.execSQL(CREATE_NEWS_TABLE)
         db.execSQL(CREATE_SUBJECT_TABLE)
-        db.execSQL(CREATE_NEWS_TABLE)
-        db.execSQL(CREATE_SUBJECT_TABLE)
         db.execSQL(CREATE_INTERVALS_TABLE)
         db.execSQL(CREATE_DAYS_TABLE)
         db.execSQL(CREATE_IMAGE_TABLE)
@@ -127,17 +125,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val db = writableDatabase
         val query = "select * from $tableNameImages where $USER_ID = '$userId';"
         val image = Images()
-        val cursor = db.rawQuery(query, null)
-        if (cursor != null && userId != null) {
-            if (cursor.moveToFirst()) {
-                image.id = cursor.getInt(cursor.getColumnIndex(ID))
-                image.userId = cursor.getInt(cursor.getColumnIndex(USER_ID))
-                image.image = cursor.getString(cursor.getColumnIndex(IMG))
+        if (userId != null) {
+            val cursor = db.rawQuery(query, null)
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    image.id = cursor.getInt(cursor.getColumnIndex(ID))
+                    image.userId = cursor.getInt(cursor.getColumnIndex(USER_ID))
+                    image.image = cursor.getString(cursor.getColumnIndex(IMG))
+                }
             }
+            cursor.close()
+            db.close()
         }
-        cursor.close()
-        db.close()
-
         return image
     }
 

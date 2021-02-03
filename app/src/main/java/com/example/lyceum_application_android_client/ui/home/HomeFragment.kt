@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.image.view.*
+import kotlinx.android.synthetic.main.image.view.capture_btn
 
 
 class HomeFragment : Fragment() {
