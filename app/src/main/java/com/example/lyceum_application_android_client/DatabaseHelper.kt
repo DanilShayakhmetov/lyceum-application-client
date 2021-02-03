@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.lyceum_application_android_client.models.Images
 import com.example.lyceum_application_android_client.models.News
 import com.example.lyceum_application_android_client.models.Schedules
 import com.example.lyceum_application_android_client.models.Users
@@ -13,28 +14,33 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_USER_TABLE = "CREATE TABLE $tableNameUser " +
-                "($ID Integer PRIMARY KEY, $NAME TEXT, $IMG BLOB, $EMAIL TEXT, $PASSWORD TEXT, $CLASS_ID INTEGER, " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT UNIQUE, $EMAIL TEXT, $PASSWORD TEXT, $CLASS_ID INTEGER, " +
                 "$ROLE TEXT, $LAST_NAME TEXT, $FIRST_NAME TEXT, $MIDDLE_NAME TEXT)"
 
         val CREATE_SCHEDULE_TABLE = "CREATE TABLE $tableNameSchedule " +
-                "($ID Integer PRIMARY KEY, $ROOM INTEGER, $SUBJECT_ID INTEGER, $CLASS_ID INTEGER, $TEACHER_ID INTEGER, " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $ROOM INTEGER, $SUBJECT_ID INTEGER, $CLASS_ID INTEGER, $TEACHER_ID INTEGER, " +
                 "$DAY_WEEK TEXT, $START_T DATETIME, $END_T DATETIME)"
 
         val CREATE_CLASS_TABLE = "CREATE TABLE $tableNameClass " +
-                "($ID Integer PRIMARY KEY, $NUMBER INTEGER, $LETTER TEXT)"
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NUMBER INTEGER, $LETTER TEXT)"
 
         val CREATE_NEWS_TABLE = "CREATE TABLE $tableNameNews " +
-                "($ID Integer PRIMARY KEY, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T DATETIME, " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T DATETIME, " +
                 "$IS_APPROVED INTEGER, $IS_HIDE INTEGER)"
 
         val CREATE_SUBJECT_TABLE = "CREATE TABLE $tableNameSubject " +
-                "($ID Integer PRIMARY KEY, $NAME TEXT)"
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT)"
+
+
+        val CREATE_IMAGE_TABLE = "CREATE TABLE $tableNameImages " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $IMG TEXT,  $USER_ID INTEGER)"
 
         db!!.execSQL(CREATE_USER_TABLE)
         db.execSQL(CREATE_SCHEDULE_TABLE)
         db.execSQL(CREATE_CLASS_TABLE)
         db.execSQL(CREATE_NEWS_TABLE)
         db.execSQL(CREATE_SUBJECT_TABLE)
+        db.execSQL(CREATE_IMAGE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -70,12 +76,31 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
-    fun createImage(name: String, image: String) {
+    fun createImage(id: String, image: String) {
         val db = writableDatabase
         val values: ContentValues = ContentValues()
+        values.put(USER_ID, id )
         values.put(IMG, image)
-        db.update(tableNameUser, values, "name='$name'", null);
+        db.insert(tableNameImages, null, values)
         db.close()
+    }
+
+    fun getImage(userId: String) : Images {
+        val db = writableDatabase
+        val query = "select * from $tableNameImages where $USER_ID = '$userId';"
+        val image = Images()
+        val cursor = db.rawQuery(query, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                image.id = cursor.getInt(cursor.getColumnIndex(ID))
+                image.userId = cursor.getInt(cursor.getColumnIndex(USER_ID))
+                image.image = cursor.getString(cursor.getColumnIndex(IMG))
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return image
     }
 
     fun userPresent(name: String, password:String): Boolean {
@@ -83,8 +108,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val  query = "select * from $tableNameUser where $NAME = '$name' and $PASSWORD = '$password';"
         val cursor = db.rawQuery(query, null)
         if (cursor.count <= 0 ) {
-            cursor.close()
-            return false
+                cursor.close()
+                return false
         }
         cursor.close()
         return true
@@ -143,11 +168,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val db = writableDatabase
         val query = "select * from $tableNameUser where $ROLE = '0' and $CLASS_ID = '$class_id';"
         val cursor = db.rawQuery(query, null)
-        var users = mutableMapOf<Int, Users>()
+        val users = mutableMapOf<Int, Users>()
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    var user = Users()
+                    val user = Users()
                     val id = cursor.getInt(cursor.getColumnIndex(ID))
                     user.id = id
                     user.firstName = cursor.getString(cursor.getColumnIndex(FIRST_NAME))
@@ -227,6 +252,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private const val tableNameSchedule = "schedule"
         private const val tableNameNews = "news"
         private const val tableNameSubject = "subject"
+        private const val tableNameImages = "image"
         private val factory = null
         private const val version = 1
         private const val ID = "id"
@@ -241,7 +267,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         //users
         private const val NAME = "Name"
         private const val EMAIL = "Email"
-        private const val IMG = "Image"
         private const val PASSWORD = "Password"
         private const val ROLE = "Role"
         private const val LAST_NAME = "LastName"
@@ -256,5 +281,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         //class
         private const val NUMBER = "Number"
         private const val LETTER = "Letter"
+        //images
+        private const val IMG = "Image"
+        private const val USER_ID = "UserId"
     }
 }

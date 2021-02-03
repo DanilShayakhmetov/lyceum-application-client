@@ -23,6 +23,7 @@ import com.example.lyceum_application_android_client.DatabaseHelper
 import com.example.lyceum_application_android_client.MainActivity
 import com.example.lyceum_application_android_client.R
 import com.example.lyceum_application_android_client.SessionManager
+import com.example.lyceum_application_android_client.models.Images
 import com.example.lyceum_application_android_client.models.Users
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -43,11 +44,11 @@ class HomeFragment : Fragment() {
     ): View? {
         val context = inflater.context
         handler = DatabaseHelper(context)
-        val session = SessionManager(context);
+        val session = SessionManager(context)
         val name: String = session.userDetails.get("name").toString()
+        val id: String = session.userDetails.get("email").toString()
         val user: Users  = handler.getUserByName(name)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val imgView = inflater.inflate(R.layout.image, container, false)
         root.img_button.setOnClickListener() {
             root.image_layout.visibility = View.VISIBLE
         }
@@ -76,6 +77,8 @@ class HomeFragment : Fragment() {
         }
 
         root.save_cont_btn.setOnClickListener() {
+            val source = handler.createImage(id, image_uri.toString())
+            Toast.makeText(context, "Изображение: ".plus(source), Toast.LENGTH_SHORT).show()
             root.image_layout.visibility = View.GONE
         }
 
@@ -86,7 +89,6 @@ class HomeFragment : Fragment() {
             val textViewFull: TextView = root.findViewById(R.id.text_fullName)
             val textViewEmail: TextView = root.findViewById(R.id.text_email)
             val textViewClass: TextView = root.findViewById(R.id.text_Class_id)
-
             homeViewModel.name.observe(this, Observer {
                 textViewName.text = user.userName
             })
@@ -96,8 +98,6 @@ class HomeFragment : Fragment() {
                     .plus(user.firstName)
                     .plus(" ")
                     .plus(user.middleName)
-                    .plus(" ")
-                    .plus(user.userImage)
             })
             homeViewModel.classId.observe(this, Observer {
                 textViewClass.text = user.classId
@@ -105,7 +105,6 @@ class HomeFragment : Fragment() {
             homeViewModel.email.observe(this, Observer {
                 textViewEmail.text = user.email
             })
-
             return root
         } else {
             homeViewModel =
@@ -134,7 +133,6 @@ class HomeFragment : Fragment() {
         //camera intent
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
-        handler.createImage("qwe", image_uri.toString())
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
     }
 
@@ -165,8 +163,6 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        const val REQUEST_CODE = 100
-        var IMAGE_DATA: Intent? = null
         private val PERMISSION_CODE = 1000;
         private val IMAGE_CAPTURE_CODE = 1001
         var image_uri: Uri? = null

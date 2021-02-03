@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
                 val name = login_name.text.toString()
                 val user = handler.getUserByName(name)
-                session.createLoginSession(login_name.text.toString(), "")
+                session.createLoginSession(login_name.text.toString(), user.id.toString())
                 val t = session.userDetails.get("name")
                 Toast.makeText(this, "login ${t} success!",  Toast.LENGTH_SHORT).show()
                 showMain()
