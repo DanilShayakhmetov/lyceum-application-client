@@ -30,11 +30,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val CREATE_SUBJECT_TABLE = "CREATE TABLE $tableNameSubject " +
                 "($ID Integer PRIMARY KEY, $NAME TEXT)"
 
+        val CREATE_INTERVALS_TABLE = "CREATE TABLE $tableNameInterval " +
+                "($ID Integer PRIMARY KEY, $FROM_TO TEXT)"
+
+        val CREATE_DAYS_TABLE = "CREATE TABLE $tableNameDays " +
+                "($ID Integer PRIMARY KEY, $NAME TEXT)"
+
         db!!.execSQL(CREATE_USER_TABLE)
         db.execSQL(CREATE_SCHEDULE_TABLE)
         db.execSQL(CREATE_CLASS_TABLE)
         db.execSQL(CREATE_NEWS_TABLE)
         db.execSQL(CREATE_SUBJECT_TABLE)
+        db.execSQL(CREATE_NEWS_TABLE)
+        db.execSQL(CREATE_SUBJECT_TABLE)
+        db.execSQL(CREATE_INTERVALS_TABLE)
+        db.execSQL(CREATE_DAYS_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -50,6 +60,34 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         for (subject in subjects) {
             values.put(NAME, subject)
             db.insert(tableNameSubject, null, values)
+        }
+
+        db.close()
+    }
+
+    fun insertIntervals() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        val intervals = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
+
+        for (key in intervals.keys) {
+            values.put(ID, key)
+            values.put(FROM_TO, intervals[key])
+            db.insert(tableNameInterval, null, values)
+        }
+
+        db.close()
+    }
+
+    fun insertDays() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        val intervals = mutableMapOf<Int, String>(1 to "Понедельник", 2 to  "Вторинк", 3 to "Среда", 4 to "Четверг", 5 to "Пятница")
+
+        for (key in intervals.keys) {
+            values.put(ID, key)
+            values.put(FROM_TO, intervals[key])
+            db.insert(tableNameDays, null, values)
         }
 
         db.close()
@@ -219,6 +257,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private const val tableNameSchedule = "schedule"
         private const val tableNameNews = "news"
         private const val tableNameSubject = "subject"
+        private const val tableNameInterval = "interval"
+        private const val tableNameDays = "days"
         private val factory = null
         private const val version = 1
         private const val ID = "id"
@@ -247,5 +287,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         //class
         private const val NUMBER = "Number"
         private const val LETTER = "Letter"
+        //intervals
+        private const val FROM_TO = "FromTo"
+
     }
 }

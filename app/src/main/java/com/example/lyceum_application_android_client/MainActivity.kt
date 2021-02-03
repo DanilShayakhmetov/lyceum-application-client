@@ -45,6 +45,8 @@ class MainActivity : AppCompatActivity() {
 
         login.setOnClickListener() {
             handler.insertSubjects()
+            handler.insertIntervals()
+            handler.insertDays()
             showLogin()
         }
 
