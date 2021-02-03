@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -49,6 +50,7 @@ class HomeFragment : Fragment() {
         val id: String = session.userDetails.get("email").toString()
         val user: Users  = handler.getUserByName(name)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val image =  Uri.parse(handler.getImage(id).image)
         root.img_button.setOnClickListener() {
             root.image_layout.visibility = View.VISIBLE
         }
@@ -89,6 +91,10 @@ class HomeFragment : Fragment() {
             val textViewFull: TextView = root.findViewById(R.id.text_fullName)
             val textViewEmail: TextView = root.findViewById(R.id.text_email)
             val textViewClass: TextView = root.findViewById(R.id.text_Class_id)
+            val profilePicViewClass: ImageView = root.findViewById(R.id.profile_pic)
+            homeViewModel.name.observe(this, Observer {
+                profilePicViewClass.setImageURI(image)
+            })
             homeViewModel.name.observe(this, Observer {
                 textViewName.text = user.userName
             })
@@ -105,6 +111,7 @@ class HomeFragment : Fragment() {
             homeViewModel.email.observe(this, Observer {
                 textViewEmail.text = user.email
             })
+
             return root
         } else {
             homeViewModel =
