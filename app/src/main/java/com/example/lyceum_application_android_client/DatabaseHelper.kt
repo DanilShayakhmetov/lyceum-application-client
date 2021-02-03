@@ -128,7 +128,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val query = "select * from $tableNameImages where $USER_ID = '$userId';"
         val image = Images()
         val cursor = db.rawQuery(query, null)
-        if (cursor != null) {
+        if (cursor != null && userId != null) {
             if (cursor.moveToFirst()) {
                 image.id = cursor.getInt(cursor.getColumnIndex(ID))
                 image.userId = cursor.getInt(cursor.getColumnIndex(USER_ID))
