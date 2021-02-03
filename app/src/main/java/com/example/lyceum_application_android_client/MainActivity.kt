@@ -1,7 +1,16 @@
 package com.example.lyceum_application_android_client
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,6 +21,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.lyceum_application_android_client.models.Users
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
 
@@ -19,6 +29,8 @@ import kotlinx.android.synthetic.main.register.*
 class MainActivity : AppCompatActivity() {
 
     lateinit var handler: DatabaseHelper
+    lateinit var pref: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,15 +43,9 @@ class MainActivity : AppCompatActivity() {
         val session = SessionManager(context);
 
         handler = DatabaseHelper(this)
-        val pref = session.pref
+        pref = session.pref
+        editor = pref.edit();
 
-
-//        val pref = session.pref
-//        val editor = pref.edit();
-//        editor.putString("username", ); // Storing string
-//        editor.putInt("key_name", "int value"); // Storing integer
-//        editor.putFloat("key_name", "float value"); // Storing float
-//        val name = pref.getInt("asd", 1)
 
         showHome()
 
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity() {
             showRegister()
         }
 
+
         register_button.setOnClickListener() {
             handler.insertUserData(register_name.text.toString(), register_email.text.toString(), register_password.text.toString(),
                 register_class.text.toString(),  register_role.text.toString(), register_first.text.toString(),
@@ -65,10 +72,9 @@ class MainActivity : AppCompatActivity() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
                 val name = login_name.text.toString()
                 val user = handler.getUserByName(name)
-                session.createLoginSession("Username", name);
-                val editor = pref.edit();
-                editor.putString("username", name)
-                Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
+                session.createLoginSession(login_name.text.toString(), user.id.toString())
+                val t = session.userDetails.get("name")
+                Toast.makeText(this, "login ${t} success!",  Toast.LENGTH_SHORT).show()
                 showMain()
             } else {
                 Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
@@ -123,6 +129,5 @@ class MainActivity : AppCompatActivity() {
         home_ll.visibility= View.GONE
         navigation.visibility = View.GONE
     }
-
 
 }

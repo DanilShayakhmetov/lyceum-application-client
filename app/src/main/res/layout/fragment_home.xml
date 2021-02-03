@@ -5,24 +5,94 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/text_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_marginTop="10dp"
+                 android:paddingLeft="5dp"
+                 android:paddingRight="5dp">
 
+        <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:background="#fa2255"
+                android:src="@drawable/ic_launcher_background" />
 
+        <TableRow android:background="#51B435" android:padding="10dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="USERNAME:" />
+            <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize = "20dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:background="#F0F7F7" android:padding="5dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ф.И.О ученника" />
+            <TextView
+                    android:id="@+id/text_fullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize = "20dp"
+                    android:textStyle="bold"/>
+        </TableRow>
+        <TableRow android:background="#F0F7F7" android:padding="5dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="EMAIL:" />
+            <TextView
+                    android:id="@+id/text_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize = "20dp"
+                    android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow android:background="#F0F7F7" android:padding="5dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Класс:" />
+            <TextView
+                    android:id="@+id/text_Class_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize = "20dp"
+                    android:textStyle="bold"/>
+        </TableRow>
+        <Button
+                android:id="@+id/img_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="фото профиля"
+        />
+    </TableLayout>
+
+    <include
+            android:id="@+id/image_layout"
+            android:visibility="gone"
+            layout="@layout/image"
+    />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="56dp" android:id="@+id/recyclerView"/>
+            tools:layout_editor_absoluteX="38dp" app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/recyclerView" android:layout_marginTop="52dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
