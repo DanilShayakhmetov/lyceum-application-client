@@ -113,18 +113,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     fun insertSubjects() {
         val db = writableDatabase
         val values: ContentValues = ContentValues()
-        val teachers: MutableMap<Int, Users> = getTeachers()
+        val query = "select * from $tableNameUser where $ROLE = '1' ;"
+        val cursor = db.rawQuery(query, null)
         val subjects = arrayOf("алгебра", "геометрия", "русс.яз", "ин.яз", "биология", "химия", "физика",
             "литература", "физ.культура", "труд", "история")
         var i = 0
-        for (teacher in teachers) {
-            values.put(NAME, subjects[i])
-            values.put(TEACHER_ID, teacher.key)
-            db.insert(tableNameSubject, null, values)
-            i++
-            if (i == 11) i = 0
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    if (i == 11) i = 0
+                    val id = cursor.getInt(cursor.getColumnIndex(ID))
+                    val subj = subjects[i]
+                    values.put(NAME, subj)
+                    values.put(TEACHER_ID, id)
+                    db.insert(tableNameSubject, null, values)
+                } while (cursor.moveToNext())
+            }
         }
 
+        cursor.close()
         db.close()
     }
 
@@ -134,7 +141,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val intervals = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
         for (i in 1..25) {
             for (key in intervals.keys) {
-//                values.put(ID, key+i-1)
                 values.put(ROOM, i)
                 values.put(SERIAL_NUM, key)
                 values.put(FROM_TO, intervals[key])
@@ -174,6 +180,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                 }
             }
         }
+        db.close()
     }
 
     fun insertUserData(name: String, email: String, password: String, class_id: String, role_id: String, first_name: String, last_name: String, middle_name: String) {

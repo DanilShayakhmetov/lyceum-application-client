@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity() {
 
         handler.insertClasses()
         handler.insertUsers()
-        handler.insertSubjects()
         handler.insertIntervals()
         handler.insertDays()
-//        handler.insertSchedule()
+        handler.insertSubjects()
+        handler.insertSchedule()
 
         showHome()
 
