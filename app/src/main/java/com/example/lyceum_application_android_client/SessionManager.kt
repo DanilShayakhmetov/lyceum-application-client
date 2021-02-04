@@ -25,7 +25,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         // Storing name in pref
         editor.putString(KEY_NAME, name)
         // Storing email in pref
-        editor.putString(KEY_EMAIL, email)
+        editor.putString(KEY_ID, email)
         // commit changes
         editor.commit()
     }
@@ -57,7 +57,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
             // user name
             user[KEY_NAME] = pref.getString(KEY_NAME, null)
             // user email id
-            user[KEY_EMAIL] = pref.getString(KEY_EMAIL, null)
+            user[KEY_ID] = pref.getString(KEY_ID, null)
             // return user
             return user
         }
@@ -93,7 +93,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         // User name (make variable public to access from outside)
         const val KEY_NAME = "name"
         // Email address (make variable public to access from outside)
-        const val KEY_EMAIL = "email"
+        const val KEY_ID = "id"
     }
 
     // Constructor

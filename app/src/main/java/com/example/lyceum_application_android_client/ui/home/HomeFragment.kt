@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
         handler = DatabaseHelper(context)
         val session = SessionManager(context)
         val name: String = session.userDetails.get("name").toString()
-        val id: String = session.userDetails.get("email").toString()
+        val id: String = session.userDetails.get("id").toString()
         val user: Users  = handler.getUserByName(name)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val image =  Uri.parse(handler.getImage(id).image)
