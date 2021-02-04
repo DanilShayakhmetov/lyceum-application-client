@@ -36,13 +36,16 @@ class MainActivity : AppCompatActivity() {
         pref = session.pref
         editor = pref.edit();
 
+        handler.insertClasses()
+        handler.insertUsers()
+        handler.insertSubjects()
+        handler.insertIntervals()
+        handler.insertDays()
+//        handler.insertSchedule()
 
         showHome()
 
         login.setOnClickListener() {
-            handler.insertSubjects()
-            handler.insertIntervals()
-            handler.insertDays()
             showLogin()
         }
 
