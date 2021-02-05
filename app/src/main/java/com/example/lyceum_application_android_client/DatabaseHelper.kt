@@ -127,6 +127,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     values.put(NAME, subj)
                     values.put(TEACHER_ID, id)
                     db.insert(tableNameSubject, null, values)
+                    i++
                 } while (cursor.moveToNext())
             }
         }
@@ -139,9 +140,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val db = writableDatabase
         val values: ContentValues = ContentValues()
         val intervals = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
+        val rooms = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
+
         for (i in 1..25) {
             for (key in intervals.keys) {
-                values.put(ROOM, i)
+                values.put(ROOM, Random.nextInt(0,44))
                 values.put(SERIAL_NUM, key)
                 values.put(FROM_TO, intervals[key])
                 db.insert(tableNameInterval, null, values)
@@ -165,26 +168,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     }
 
     fun insertSchedule() {
-        val db = writableDatabase
-        val values: ContentValues = ContentValues()
-        val days = getDays()
-        val classes = getClasses()
-        val intervals = getIntervals()
-        for (day in days.keys) {
-            for (classItem in classes.keys) {
-                for (interval in intervals.keys) {
-                    values.put(SUBJECT_ID, Random.nextInt(0,44))
-                    values.put(CLASS_ID, classItem)
-                    values.put(DAY_ID, day)
-                    values.put(INTERVAL_ID, interval)
-                    db.insert(tableNameSchedule, null, values)
-                }
-            }
-        }
-        db.close()
-    }
-
-    fun insertScheduleTest() {
         val db = writableDatabase
         val values: ContentValues = ContentValues()
         val queryDays = "select * from $tableNameDays ;"
@@ -537,18 +520,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     }
 
     fun getScheduleResultString(class_id: String, day_id: String): String {
-        val schedule = getScheduleResultMap(class_id, day_id)
-        var resultString = ""
-        val keys = schedule.toSortedMap().keys
+//        val schedule = getScheduleResultMap(class_id, day_id)
+//        var resultString = ""
+//        val keys = schedule.toSortedMap().keys
 
-        for (key in keys) {
-            val item = schedule[key]
-            if (item != null) {
-                resultString = String.format("%s%n%s%n%s", item.subject, item.interval, item.room)
-            } else {
-                resultString = "result string generator error"
+        var resultString = ""
+        for (i in 1..5) {
+            val schedule = getScheduleResultMap(class_id, day_id)
+            val keys = schedule.toSortedMap().keys
+            for (key in keys) {
+                val item = schedule[key]
+                if (item != null) {
+                    resultString = resultString.plus(String.format("%s%n%s%n%s%n", item.subject, item.interval, item.room))
+                }
             }
+            resultString.plus("|")
         }
+
         return resultString
     }
 
@@ -578,15 +566,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return newsAll
     }
 
-    fun testSchedule(): Int {
+    fun testSchedule(): String {
         val db = writableDatabase
-        val query = "select * from $tableNameSchedule;"
+        val query = "select * from $tableNameSubject;"
         val cursor = db.rawQuery(query, null)
-        var counter = 0
+        var counter = ""
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    counter++
+                    counter = counter.plus(cursor.getString(cursor.getColumnIndex(FROM_TO)))
                 } while (cursor.moveToNext())
             }
         }
@@ -595,7 +583,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
         return counter
     }
-
 
     fun testSchedule2(class_id: String, day_id: String): String {
         val db = writableDatabase

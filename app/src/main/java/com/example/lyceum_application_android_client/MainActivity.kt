@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         handler.insertIntervals()
         handler.insertDays()
         handler.insertSubjects()
-        handler.insertScheduleTest()
+        handler.insertSchedule()
 
         showHome()
 
@@ -105,9 +105,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMain() {
-        login_layout.visibility= View.GONE
-        register_layout.visibility= View.GONE
-        home_ll.visibility= View.GONE
+        login_layout.visibility = View.GONE
+        register_layout.visibility = View.GONE
+        home_ll.visibility = View.GONE
         navigation.visibility = View.VISIBLE
     }
 
