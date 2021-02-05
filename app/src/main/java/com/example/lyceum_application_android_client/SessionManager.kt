@@ -20,12 +20,12 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
     /**
      * Create login session
      */
-    fun createLoginSession(name: String?, email: String?) { // Storing login value as TRUE
+    fun createLoginSession(name: String?, id: String?, class_id: String?) { // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true)
         // Storing name in pref
         editor.putString(KEY_NAME, name)
-        // Storing email in pref
-        editor.putString(KEY_ID, email)
+        editor.putString(KEY_CLASS_ID, class_id)
+        editor.putString(KEY_ID, id)
         // commit changes
         editor.commit()
     }
@@ -56,7 +56,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
             val user = HashMap<String, String?>()
             // user name
             user[KEY_NAME] = pref.getString(KEY_NAME, null)
-            // user email id
+            user[KEY_CLASS_ID] = pref.getString(KEY_CLASS_ID, null)
             user[KEY_ID] = pref.getString(KEY_ID, null)
             // return user
             return user
@@ -92,8 +92,8 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         private const val IS_LOGIN = "IsLoggedIn"
         // User name (make variable public to access from outside)
         const val KEY_NAME = "name"
-        // Email address (make variable public to access from outside)
         const val KEY_ID = "id"
+        const val KEY_CLASS_ID = "class_id"
     }
 
     // Constructor

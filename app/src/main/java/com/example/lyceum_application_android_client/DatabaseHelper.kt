@@ -177,9 +177,48 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     values.put(CLASS_ID, classItem)
                     values.put(DAY_ID, day)
                     values.put(INTERVAL_ID, interval)
+                    db.insert(tableNameSchedule, null, values)
                 }
             }
         }
+        db.close()
+    }
+
+    fun insertScheduleTest() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        val queryDays = "select * from $tableNameDays ;"
+        val queryClasses = "select * from $tableNameClass ;"
+        val queryIntervals = "select * from $tableNameInterval ;"
+        val cursorDays = db.rawQuery(queryDays, null)
+        val cursorClasses = db.rawQuery(queryClasses, null)
+        val cursorIntervals = db.rawQuery(queryIntervals, null)
+
+        if (cursorDays != null && cursorClasses != null && cursorIntervals != null) {
+            if (cursorDays.moveToFirst()) {
+                do {
+                    val dayID = cursorDays.getInt(cursorDays.getColumnIndex(ID))
+                    if (cursorClasses.moveToFirst()) {
+                        do {
+                            val classID = cursorDays.getInt(cursorDays.getColumnIndex(ID))
+                            if (cursorIntervals.moveToFirst()) {
+                                do {
+                                    val intervalId = cursorIntervals.getInt(cursorIntervals.getColumnIndex(ID))
+                                    values.put(SUBJECT_ID, Random.nextInt(0,44))
+                                    values.put(CLASS_ID, classID)
+                                    values.put(DAY_ID, dayID)
+                                    values.put(INTERVAL_ID, intervalId)
+                                    db.insert(tableNameSchedule, null, values)
+                                } while (cursorIntervals.moveToNext())
+                            }
+                        } while (cursorClasses.moveToNext())
+                    }
+                } while (cursorDays.moveToNext())
+            }
+        }
+        cursorDays.close()
+        cursorClasses.close()
+        cursorIntervals.close()
         db.close()
     }
 
@@ -329,7 +368,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return intervals
     }
 
-
     fun getUserByName(name: String) : Users {
         val db = writableDatabase
         val query = "select * from $tableNameUser where $NAME = '$name';"
@@ -430,6 +468,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return resultSchedule
     }
 
+    fun getInterval(interval_id: String): Intervals {
+        val db = writableDatabase
+        val query = "select * from $tableNameInterval where $ID = '$interval_id';"
+        val cursor = db.rawQuery(query, null)
+        var interval = Intervals()
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                interval.id = cursor.getInt(cursor.getColumnIndex(ID))
+                interval.room = cursor.getString(cursor.getColumnIndex(ROOM))
+                interval.fromTo = cursor.getString(cursor.getColumnIndex(FROM_TO))
+                interval.serialNum = cursor.getString(cursor.getColumnIndex(SERIAL_NUM))
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return interval
+    }
+
     fun getDay(day_id: String): String {
         val db = writableDatabase
         val query = "select * from $tableNameDays where $ID = '$day_id';"
@@ -444,22 +501,56 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return day
     }
 
-
     fun getSubject(day_id: String, interval_id: String): String {
         val db = writableDatabase
-        val query = "select name from $tableNameSubject as sub union select $tableNameSchedule as sch on sub.id = sch.$SUBJECT_ID where $DAY_ID = '$day_id' and $INTERVAL_ID= '$interval_id';"
+        val query = "select name from $tableNameSubject as sub inner join $tableNameSchedule as sch on sub.id = sch.$SUBJECT_ID where $DAY_ID = '$day_id' and $INTERVAL_ID= '$interval_id';"
         val cursor = db.rawQuery(query, null)
         var subjectName = ""
-        if (cursor.count <= 0 ) {
-            subjectName = cursor.getString(cursor.getColumnIndex(NAME))
-            cursor.close()
-            return subjectName
+        if (cursor.count != 0 ) {
+            if (cursor.moveToFirst()) {
+                subjectName = cursor.getString(cursor.getColumnIndex(NAME))
+                cursor.close()
+                return subjectName
+            }
         }
         cursor.close()
         return "_____"
     }
 
+    fun getScheduleResultMap(class_id: String, day_id: String): MutableMap<String, ScheduleData> {
+        val schedules = getClassSchedule(class_id, day_id)
+        val resultSchedule = mutableMapOf<String, ScheduleData>()
+        if (schedules.isNotEmpty()) {
+            for (schedule in schedules) {
+                val scheduleData = ScheduleData()
+                val interval = getInterval(schedule.key)
+                val subject = getSubject(day_id, interval.id.toString())
+                val serial = interval.serialNum
+                scheduleData.room = interval.room
+                scheduleData.interval = interval.fromTo
+                scheduleData.subject = subject
+                resultSchedule[serial] = scheduleData
+            }
+        }
 
+        return resultSchedule
+    }
+
+    fun getScheduleResultString(class_id: String, day_id: String): String {
+        val schedule = getScheduleResultMap(class_id, day_id)
+        var resultString = ""
+        val keys = schedule.toSortedMap().keys
+
+        for (key in keys) {
+            val item = schedule[key]
+            if (item != null) {
+                resultString = String.format("%s%n%s%n%s", item.subject, item.interval, item.room)
+            } else {
+                resultString = "result string generator error"
+            }
+        }
+        return resultString
+    }
 
     fun getNews() : Map<String, News>{
         val db = writableDatabase
@@ -486,6 +577,52 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
         return newsAll
     }
+
+    fun testSchedule(): Int {
+        val db = writableDatabase
+        val query = "select * from $tableNameSchedule;"
+        val cursor = db.rawQuery(query, null)
+        var counter = 0
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    counter++
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return counter
+    }
+
+
+    fun testSchedule2(class_id: String, day_id: String): String {
+        val db = writableDatabase
+        val classs_id = 2
+        val days_id = 2
+        val query = "select * from $tableNameSchedule where $CLASS_ID = '$classs_id' AND $DAY_ID = '$days_id';"
+        val cursor = db.rawQuery(query, null)
+        var counter = 0
+        var resultString = ""
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    var resp =  cursor.getInt(cursor.getColumnIndex(ID))
+                    resultString = resultString.plus(resp)
+                    resp = cursor.getInt(cursor.getColumnIndex(CLASS_ID))
+                    resultString = resultString.plus(resp)
+                    resp = cursor.getInt(cursor.getColumnIndex(DAY_ID))
+                    resultString = resultString.plus(resp)
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return resultString
+    }
+
 
     companion object {
         private const val dbName = "userDB.db"
