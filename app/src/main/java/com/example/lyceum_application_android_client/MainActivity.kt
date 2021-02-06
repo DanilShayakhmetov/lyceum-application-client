@@ -36,12 +36,14 @@ class MainActivity : AppCompatActivity() {
         pref = session.pref
         editor = pref.edit();
 
-        handler.insertClasses()
-        handler.insertUsers()
-        handler.insertIntervals()
-        handler.insertDays()
-        handler.insertSubjects()
-        handler.insertSchedule()
+        if (handler.getClasses().isEmpty()) {
+            handler.insertClasses()
+            handler.insertUsers()
+            handler.insertIntervals()
+            handler.insertDays()
+            handler.insertSubjects()
+            handler.insertSchedule()
+        }
 
         showHome()
 

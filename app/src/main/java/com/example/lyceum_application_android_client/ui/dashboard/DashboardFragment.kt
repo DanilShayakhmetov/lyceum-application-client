@@ -38,95 +38,71 @@ class DashboardFragment : Fragment() {
         dashboardViewModel =
             ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        val mondayView: TextView = root.findViewById(R.id.monday_schedule)
-        val tuesdayView: TextView = root.findViewById(R.id.tuesday_schedule)
-        val wednesdayView: TextView = root.findViewById(R.id.wednesday_schedule)
-        val thursdayView: TextView = root.findViewById(R.id.thursday_schedule)
-        val fridayView: TextView = root.findViewById(R.id.friday_schedule)
 
-        root.monday.setOnClickListener(){
-            showMonday(root)
-        }
-        root.tuesday.setOnClickListener(){
-            showTuesday(root)
-        }
-        root.wednesday.setOnClickListener(){
-            showWednesday(root)
-        }
-        root.thursday.setOnClickListener(){
-            showThursday(root)
-        }
-        root.friday.setOnClickListener(){
-            showFriday(root)
-        }
+        val monView: TextView = root.findViewById(R.id.mon_shed)
+        val tueView: TextView = root.findViewById(R.id.tue_shed)
+        val wedView: TextView = root.findViewById(R.id.wed_shed)
+        val thuView: TextView = root.findViewById(R.id.thu_shed)
+        val friView: TextView = root.findViewById(R.id.fri_shed)
 
-
-
-        dashboardViewModel.text.observe(this, Observer {
-            textView.text = ""
-        })
 
         dashboardViewModel.monday.observe(this, Observer {
-            mondayView.text = scheduleMonday
+            monView.text =  scheduleMonday
         })
-
         dashboardViewModel.tuesday.observe(this, Observer {
-            tuesdayView.text = scheduleTuesday
+            tueView.text =  scheduleTuesday
         })
-
         dashboardViewModel.wednesday.observe(this, Observer {
-            wednesdayView.text = scheduleWednesday
+            wedView.text =  scheduleWednesday
         })
-
         dashboardViewModel.thursday.observe(this, Observer {
-            thursdayView.text = scheduleThursday
+            thuView.text =  scheduleThursday
+        })
+        dashboardViewModel.friday.observe(this, Observer {
+            friView.text = scheduleFriday
         })
 
-        dashboardViewModel.friday.observe(this, Observer {
-            fridayView.text = scheduleFriday
-        })
+
+        root.monday.setOnClickListener(){
+            root.tue_shed.visibility = View.GONE
+            root.wed_shed.visibility = View.GONE
+            root.thu_shed.visibility = View.GONE
+            root.fri_shed.visibility = View.GONE
+            root.mon_shed.visibility = View.VISIBLE
+        }
+
+        root.tuesday.setOnClickListener(){
+            root.tue_shed.visibility = View.VISIBLE
+            root.wed_shed.visibility = View.GONE
+            root.thu_shed.visibility = View.GONE
+            root.fri_shed.visibility = View.GONE
+            root.mon_shed.visibility = View.GONE
+        }
+
+        root.wednesday.setOnClickListener(){
+            root.tue_shed.visibility = View.GONE
+            root.wed_shed.visibility = View.VISIBLE
+            root.thu_shed.visibility = View.GONE
+            root.fri_shed.visibility = View.GONE
+            root.mon_shed.visibility = View.GONE
+        }
+
+        root.thursday.setOnClickListener(){
+            root.tue_shed.visibility = View.GONE
+            root.wed_shed.visibility = View.GONE
+            root.thu_shed.visibility = View.VISIBLE
+            root.fri_shed.visibility = View.GONE
+            root.mon_shed.visibility = View.GONE
+        }
+
+        root.friday.setOnClickListener(){
+            root.tue_shed.visibility = View.GONE
+            root.wed_shed.visibility = View.GONE
+            root.thu_shed.visibility = View.GONE
+            root.fri_shed.visibility = View.VISIBLE
+            root.mon_shed.visibility = View.GONE
+        }
+
         return root
     }
-
-    private fun showMonday(root: View) {
-        root.monday_schedule.visibility = View.VISIBLE
-        root.tuesday_schedule.visibility = View.GONE
-        root.wednesday_schedule.visibility = View.GONE
-        root.thursday_schedule.visibility = View.GONE
-        root.friday_schedule.visibility = View.GONE
-    }
-
-    private fun showTuesday(root: View) {
-        root.monday_schedule.visibility = View.GONE
-        root.tuesday_schedule.visibility = View.VISIBLE
-        root.wednesday_schedule.visibility = View.GONE
-        root.thursday_schedule.visibility = View.GONE
-        root.friday_schedule.visibility = View.GONE
-    }
-
-    private fun showWednesday(root: View) {
-        root.monday_schedule.visibility = View.GONE
-        root.tuesday_schedule.visibility = View.GONE
-        root.wednesday_schedule.visibility = View.VISIBLE
-        root.thursday_schedule.visibility = View.GONE
-        root.friday_schedule.visibility = View.GONE
-    }
-
-    private fun showThursday(root: View) {
-        root.monday_schedule.visibility = View.GONE
-        root.tuesday_schedule.visibility = View.GONE
-        root.wednesday_schedule.visibility = View.GONE
-        root.thursday_schedule.visibility = View. VISIBLE
-        root.friday_schedule.visibility = View.GONE
-    }
-
-    private fun showFriday(root: View) {
-        root.monday_schedule.visibility = View.GONE
-        root.tuesday_schedule.visibility = View.GONE
-        root.wednesday_schedule.visibility = View.GONE
-        root.thursday_schedule.visibility = View.GONE
-        root.friday_schedule.visibility = View.VISIBLE
-    }
-
 }

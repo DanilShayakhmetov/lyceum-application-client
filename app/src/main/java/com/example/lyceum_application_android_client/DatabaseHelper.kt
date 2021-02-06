@@ -523,9 +523,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     }
 
     fun getSchedule(class_id: String): ArrayList<String> {
-        var resultString = ""
-        var resultArr = arrayListOf<String>("","","","","")
+        val resultArr = arrayListOf<String>("","","","","")
         for(i in 1..5) {
+            var resultString = ""
             val schedule = getScheduleResultMap(class_id, i.toString())
             val keys = schedule.toSortedMap().keys
             for (key in keys) {
@@ -544,12 +544,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val db = writableDatabase
         val query = "select * from $tableNameNews where $IS_HIDE = '0' ;"
         val cursor = db.rawQuery(query, null)
-        var newsAll = mutableMapOf<String, News>()
+        val newsAll = mutableMapOf<String, News>()
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    var news = News()
-                    var time = cursor.getString(cursor.getColumnIndex(CREATION_T))
+                    val news = News()
+                    val time = cursor.getString(cursor.getColumnIndex(CREATION_T))
                     news.id = cursor.getInt(cursor.getColumnIndex(ID))
                     news.title = cursor.getString(cursor.getColumnIndex(TITLE))
                     news.message = cursor.getString(cursor.getColumnIndex(MESSAGE))
