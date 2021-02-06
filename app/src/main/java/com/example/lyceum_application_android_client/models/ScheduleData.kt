@@ -4,5 +4,6 @@ class ScheduleData {
     var id: Int = 0;
     var subject = "";
     var interval = "";
+    var day = "";
     var room = "";
 }

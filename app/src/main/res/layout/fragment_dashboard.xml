@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
             android:id="@+id/text_dashboard"
@@ -14,10 +14,104 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
+            android:text="Выберите день недели:"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <LinearLayout
+            android:layout_width="413dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="58dp" tools:layout_editor_absoluteX="-5dp">
+        <Button
+                android:id="@+id/monday"
+                android:layout_height="wrap_content"
+                android:layout_width="200px"
+                android:text="ПН"
+        />
+        <Button
+                android:id="@+id/tuesday"
+                android:layout_height="wrap_content"
+                android:layout_width="200px"
+                android:text="ВТ"
+        />
+        <Button
+                android:id="@+id/wednesday"
+                android:layout_height="wrap_content"
+                android:layout_width="200px"
+                android:text="СР"
+        />
+        <Button
+                android:id="@+id/thursday"
+                android:layout_height="wrap_content"
+                android:layout_width="200px"
+                android:text="ЧТ"
+        />
+        <Button
+                android:id="@+id/friday"
+                android:layout_height="wrap_content"
+                android:layout_width="200px"
+                android:text="ПТ"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="316dp"
+            android:layout_height="573dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="128dp"
+            tools:layout_editor_absoluteX="50dp">
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="РАСПИСАНИЕ"
+                android:id="@+id/tuesday_schedule"
+                android:textSize="10dp"
+                android:textStyle="bold" tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="143dp"
+                tools:layout_editor_absoluteX="169dp"/>
+        <TextView
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="РАСПИСАНИЕ"
+                android:id="@+id/wednesday_schedule"
+                android:textSize="10dp"
+                android:textStyle="bold" tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="143dp"
+                tools:layout_editor_absoluteX="169dp"/>
+        <TextView
+                android:layout_width="95dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="РАСПИСАНИЕ"
+                android:id="@+id/friday_schedule"
+                android:textSize="10dp"
+                android:textStyle="bold" tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="143dp"
+                tools:layout_editor_absoluteX="169dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="РАСПИСАНИЕ"
+                android:id="@+id/monday_schedule"
+                android:textSize="10dp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="143dp"
+                tools:layout_editor_absoluteX="169dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="РАСПИСАНИЕ"
+                android:id="@+id/thursday_schedule"
+                android:textSize="10dp"
+                android:textStyle="bold" tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="194dp"
+                tools:layout_editor_absoluteX="172dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

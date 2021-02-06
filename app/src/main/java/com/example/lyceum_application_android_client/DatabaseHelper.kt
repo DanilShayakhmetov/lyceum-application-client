@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.lyceum_application_android_client.models.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
@@ -78,7 +79,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         var counter = 0
         if (cursor != null) {
             for(i in 1..cursor.count) {
-                for (j in 1..20) {
+                //После тестов можно увеличить
+                for (j in 1..5) {
                     val n = (counter).toString()
                     val prefix = name.plus(n)
                     values.put(NAME, prefix)
@@ -140,7 +142,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val db = writableDatabase
         val values: ContentValues = ContentValues()
         val intervals = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
-        val rooms = mutableMapOf<Int, String>(1 to "8:00 - 8:45", 2 to  "9:00 - 9:45", 3 to "10:00 - 10:45", 4 to "11:00 - 11:45", 5 to "12:00 - 12:45", 6 to "13:00 - 13:45", 7 to "14:00 - 14:45")
 
         for (i in 1..25) {
             for (key in intervals.keys) {
@@ -169,7 +170,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
     fun insertSchedule() {
         val db = writableDatabase
-        val values: ContentValues = ContentValues()
         val queryDays = "select * from $tableNameDays ;"
         val queryClasses = "select * from $tableNameClass ;"
         val queryIntervals = "select * from $tableNameInterval ;"
@@ -183,9 +183,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     val dayID = cursorDays.getInt(cursorDays.getColumnIndex(ID))
                     if (cursorClasses.moveToFirst()) {
                         do {
-                            val classID = cursorDays.getInt(cursorDays.getColumnIndex(ID))
+                            val classID = cursorClasses.getInt(cursorDays.getColumnIndex(ID))
                             if (cursorIntervals.moveToFirst()) {
                                 do {
+                                    val values: ContentValues = ContentValues()
                                     val intervalId = cursorIntervals.getInt(cursorIntervals.getColumnIndex(ID))
                                     values.put(SUBJECT_ID, Random.nextInt(0,44))
                                     values.put(CLASS_ID, classID)
@@ -507,11 +508,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
             for (schedule in schedules) {
                 val scheduleData = ScheduleData()
                 val interval = getInterval(schedule.key)
-                val subject = getSubject(day_id, interval.id.toString())
+                val day = schedule.value.dayId
+                val subject = getSubject(day, interval.id.toString())
                 val serial = interval.serialNum
                 scheduleData.room = interval.room
                 scheduleData.interval = interval.fromTo
                 scheduleData.subject = subject
+                scheduleData.day = day
                 resultSchedule[serial] = scheduleData
             }
         }
@@ -519,14 +522,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return resultSchedule
     }
 
-    fun getScheduleResultString(class_id: String, day_id: String): String {
-//        val schedule = getScheduleResultMap(class_id, day_id)
-//        var resultString = ""
-//        val keys = schedule.toSortedMap().keys
-
+    fun getSchedule(class_id: String): ArrayList<String> {
         var resultString = ""
-        for (i in 1..5) {
-            val schedule = getScheduleResultMap(class_id, day_id)
+        var resultArr = arrayListOf<String>("","","","","")
+        for(i in 1..5) {
+            val schedule = getScheduleResultMap(class_id, i.toString())
             val keys = schedule.toSortedMap().keys
             for (key in keys) {
                 val item = schedule[key]
@@ -534,10 +534,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     resultString = resultString.plus(String.format("%s%n%s%n%s%n", item.subject, item.interval, item.room))
                 }
             }
-            resultString.plus("|")
+            resultArr[i-1] = resultString
         }
 
-        return resultString
+        return resultArr
     }
 
     fun getNews() : Map<String, News>{

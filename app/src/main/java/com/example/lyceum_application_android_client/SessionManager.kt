@@ -20,11 +20,15 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
     /**
      * Create login session
      */
-    fun createLoginSession(name: String?, id: String?, class_id: String?) { // Storing login value as TRUE
+    fun createLoginSession(name: String?, id: String?, schedule1: String?, schedule2: String?, schedule3: String?, schedule4: String?, schedule5: String?) { // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true)
         // Storing name in pref
         editor.putString(KEY_NAME, name)
-        editor.putString(KEY_CLASS_ID, class_id)
+        editor.putString(KEY_SCHEDULE_1, schedule1)
+        editor.putString(KEY_SCHEDULE_2, schedule2)
+        editor.putString(KEY_SCHEDULE_3, schedule3)
+        editor.putString(KEY_SCHEDULE_4, schedule4)
+        editor.putString(KEY_SCHEDULE_5, schedule5)
         editor.putString(KEY_ID, id)
         // commit changes
         editor.commit()
@@ -56,7 +60,11 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
             val user = HashMap<String, String?>()
             // user name
             user[KEY_NAME] = pref.getString(KEY_NAME, null)
-            user[KEY_CLASS_ID] = pref.getString(KEY_CLASS_ID, null)
+            user[KEY_SCHEDULE_1] = pref.getString(KEY_SCHEDULE_1, null)
+            user[KEY_SCHEDULE_2] = pref.getString(KEY_SCHEDULE_2, null)
+            user[KEY_SCHEDULE_3] = pref.getString(KEY_SCHEDULE_3, null)
+            user[KEY_SCHEDULE_4] = pref.getString(KEY_SCHEDULE_4, null)
+            user[KEY_SCHEDULE_5] = pref.getString(KEY_SCHEDULE_5, null)
             user[KEY_ID] = pref.getString(KEY_ID, null)
             // return user
             return user
@@ -93,7 +101,11 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         // User name (make variable public to access from outside)
         const val KEY_NAME = "name"
         const val KEY_ID = "id"
-        const val KEY_CLASS_ID = "class_id"
+        const val KEY_SCHEDULE_1 = "schedule1"
+        const val KEY_SCHEDULE_2 = "schedule2"
+        const val KEY_SCHEDULE_3 = "schedule3"
+        const val KEY_SCHEDULE_4 = "schedule4"
+        const val KEY_SCHEDULE_5 = "schedule5"
     }
 
     // Constructor

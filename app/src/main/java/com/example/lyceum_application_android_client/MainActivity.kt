@@ -65,9 +65,9 @@ class MainActivity : AppCompatActivity() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
                 val name = login_name.text.toString()
                 val user = handler.getUserByName(name)
-                session.createLoginSession(login_name.text.toString(), user.id.toString(), user.classId)
-                val t = session.userDetails.get("name")
-                Toast.makeText(this, "login ${t} success!",  Toast.LENGTH_SHORT).show()
+                val schedule = handler.getSchedule(user.classId)
+                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4])
+                Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
                 showMain()
             } else {
                 Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
