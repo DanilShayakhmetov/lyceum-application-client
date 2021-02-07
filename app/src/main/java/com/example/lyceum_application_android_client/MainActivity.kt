@@ -1,16 +1,8 @@
 package com.example.lyceum_application_android_client
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ContentValues
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,9 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.lyceum_application_android_client.models.Users
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
 
@@ -46,11 +36,18 @@ class MainActivity : AppCompatActivity() {
         pref = session.pref
         editor = pref.edit();
 
+        if (handler.getClasses().isEmpty()) {
+            handler.insertClasses()
+            handler.insertUsers()
+            handler.insertIntervals()
+            handler.insertDays()
+            handler.insertSubjects()
+            handler.insertSchedule()
+        }
 
         showHome()
 
         login.setOnClickListener() {
-            handler.insertSubjects()
             showLogin()
         }
 
@@ -70,9 +67,9 @@ class MainActivity : AppCompatActivity() {
             if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
                 val name = login_name.text.toString()
                 val user = handler.getUserByName(name)
-                session.createLoginSession(login_name.text.toString(), user.id.toString())
-                val t = session.userDetails.get("name")
-                Toast.makeText(this, "login ${t} success!",  Toast.LENGTH_SHORT).show()
+                val schedule = handler.getSchedule(user.classId)
+                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4])
+                Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
                 showMain()
             } else {
                 Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
@@ -110,9 +107,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMain() {
-        login_layout.visibility= View.GONE
-        register_layout.visibility= View.GONE
-        home_ll.visibility= View.GONE
+        login_layout.visibility = View.GONE
+        register_layout.visibility = View.GONE
+        home_ll.visibility = View.GONE
         navigation.visibility = View.VISIBLE
     }
 

@@ -25,15 +25,6 @@ class HomeViewModel : ViewModel() {
         value = ""
     }
 
-    val last: LiveData<String> = _last
-
-    val _middle = MutableLiveData<String>().apply {
-        value = ""
-    }
-
-    val middle: LiveData<String> = _middle
-
-
     val _email = MutableLiveData<String>().apply {
         value = ""
     }

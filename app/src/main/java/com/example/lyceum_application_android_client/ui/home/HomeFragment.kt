@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.image.view.*
+import kotlinx.android.synthetic.main.image.view.capture_btn
 
 
 class HomeFragment : Fragment() {
@@ -47,7 +48,7 @@ class HomeFragment : Fragment() {
         handler = DatabaseHelper(context)
         val session = SessionManager(context)
         val name: String = session.userDetails.get("name").toString()
-        val id: String = session.userDetails.get("email").toString()
+        val id: String = session.userDetails.get("id").toString()
         val user: Users  = handler.getUserByName(name)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val image =  Uri.parse(handler.getImage(id).image)
