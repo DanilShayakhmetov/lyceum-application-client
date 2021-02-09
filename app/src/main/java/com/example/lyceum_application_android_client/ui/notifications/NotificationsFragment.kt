@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.lyceum_application_android_client.DatabaseHelper
@@ -35,6 +36,7 @@ class NotificationsFragment : Fragment() {
         val news = handler.getNews()
         val session = SessionManager(context)
         val name: String = session.userDetails.get("name").toString()
+        newsLayout.setPadding(20,100,0,0)
 
         root.add_news_button.setOnClickListener() {
             root.root_layout.visibility = View.GONE

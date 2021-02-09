@@ -21,11 +21,6 @@
 
         <TableRow android:background="#51B435" android:padding="10dp">
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="USERNAME:" />
-            <TextView
                     android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,11 +31,6 @@
         </TableRow>
         <TableRow android:background="#F0F7F7" android:padding="5dp">
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ф.И.О ученника" />
-            <TextView
                     android:id="@+id/text_fullName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -49,11 +39,6 @@
                     android:textStyle="bold"/>
         </TableRow>
         <TableRow android:background="#F0F7F7" android:padding="5dp">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="EMAIL:" />
             <TextView
                     android:id="@+id/text_email"
                     android:layout_width="wrap_content"
@@ -64,11 +49,6 @@
 
         </TableRow>
         <TableRow android:background="#F0F7F7" android:padding="5dp">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Класс:" />
             <TextView
                     android:id="@+id/text_Class_id"
                     android:layout_width="wrap_content"

@@ -302,6 +302,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return image
     }
 
+    fun getClassName(class_id: String) : String {
+        val db = writableDatabase
+        val query = "select * from $tableNameClass where $ID = '$class_id';"
+        val cursor = db.rawQuery(query, null)
+        var resultString = ""
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                 resultString = resultString.plus(cursor.getString(cursor.getColumnIndex(NUMBER)))
+                     .plus(cursor.getString(cursor.getColumnIndex(LETTER)))
+            }
+        }
+        cursor.close()
+        db.close()
+        return resultString
+    }
+
+
     fun getTeachers() : MutableMap  <Int, Users> {
         val db = writableDatabase
         val query = "select * from $tableNameUser where $ROLE = '1';"

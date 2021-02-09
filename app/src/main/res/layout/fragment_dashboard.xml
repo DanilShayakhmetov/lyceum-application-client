@@ -6,40 +6,40 @@
         android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-            android:layout_width="413dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            tools:ignore="MissingConstraints" tools:layout_editor_absoluteY="8dp" tools:layout_editor_absoluteX="-5dp">
+            tools:ignore="MissingConstraints">
         <Button
                 android:id="@+id/monday"
                 android:layout_height="wrap_content"
-                android:layout_width="200px"
+                android:layout_width="150px"
                 android:text="ПН"
         />
         <Button
                 android:id="@+id/tuesday"
                 android:layout_height="wrap_content"
-                android:layout_width="200px"
+                android:layout_width="150px"
                 android:text="ВТ"
         />
         <Button
                 android:id="@+id/wednesday"
                 android:layout_height="wrap_content"
-                android:layout_width="200px"
+                android:layout_width="150px"
                 android:text="СР"
         />
         <Button
                 android:id="@+id/thursday"
                 android:layout_height="wrap_content"
-                android:layout_width="200px"
+                android:layout_width="150px"
                 android:text="ЧТ"
         />
         <Button
                 android:id="@+id/friday"
                 android:layout_height="wrap_content"
-                android:layout_width="200px"
+                android:layout_width="150px"
                 android:text="ПТ"
         />
     </LinearLayout>
