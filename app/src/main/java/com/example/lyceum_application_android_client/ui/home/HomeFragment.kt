@@ -98,20 +98,21 @@ class HomeFragment : Fragment() {
                 profilePicViewClass.setImageURI(image)
             })
             homeViewModel.name.observe(this, Observer {
-                textViewName.text = user.userName
+                textViewName.text = "USERNAME:  ".plus(user.userName)
             })
             homeViewModel.first.observe(this, Observer {
-                textViewFull.text = user.lastName
-                    .plus(" ")
+                textViewFull.text = "Ф.И.О:  "
+                    .plus(user.lastName)
+                    .plus("  ")
                     .plus(user.firstName)
-                    .plus(" ")
+                    .plus("  ")
                     .plus(user.middleName)
             })
             homeViewModel.classId.observe(this, Observer {
-                textViewClass.text = user.classId
+                textViewClass.text = "КЛАСС:  ".plus(handler.getClassName(user.classId))
             })
             homeViewModel.email.observe(this, Observer {
-                textViewEmail.text = user.email
+                textViewEmail.text = "Email:  ".plus(user.email)
             })
 
             return root
