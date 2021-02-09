@@ -54,6 +54,7 @@ class HomeFragment : Fragment() {
         val image =  Uri.parse(handler.getImage(id).image)
         root.img_button.setOnClickListener() {
             root.image_layout.visibility = View.VISIBLE
+            root.img_button.visibility = View.GONE
         }
 
         root.capture_btn.setOnClickListener() {
