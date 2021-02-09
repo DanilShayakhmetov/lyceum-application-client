@@ -7,8 +7,7 @@
              android:paddingRight="5dp">
     <TableRow android:background="#51B435"
               android:padding="10dp"
-              android:id="@+id/classmates_table"
-
+              android:id="@+id/tutors_table"
     >
         <TextView
                 android:layout_width="wrap_content"

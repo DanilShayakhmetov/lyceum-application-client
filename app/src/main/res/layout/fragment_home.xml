@@ -10,7 +10,9 @@
                  android:layout_height="match_parent"
                  android:layout_marginTop="10dp"
                  android:paddingLeft="5dp"
-                 android:paddingRight="5dp">
+                 android:paddingRight="5dp"
+                 android:id="@+id/home_fragment_layout"
+    >
 
         <ImageView
                 android:id="@+id/profile_pic"
@@ -57,19 +59,80 @@
                     android:textSize = "20dp"
                     android:textStyle="bold"/>
         </TableRow>
-        <Button
-                android:id="@+id/img_button"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="фото профиля"
-        />
+        <TableRow android:background="#F0F7F7" android:padding="5dp"
+                  android:orientation="horizontal"
+                  android:gravity="center_horizontal"
+        >
+
+            <Button
+                    android:id="@+id/img_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="фото профиля"
+            />
+
+        </TableRow>
+        <TableRow android:background="#F0F7F7" android:padding="5dp"
+                  android:orientation="horizontal"
+                  android:gravity="center_horizontal"
+        >
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    tools:ignore="MissingConstraints">
+                <Button
+                        android:id="@+id/show_tutors_button"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Учителя"
+                />
+                <Button
+                        android:id="@+id/show_classmates_button"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Одноклассники"
+                />
+            </LinearLayout>
+        </TableRow>
     </TableLayout>
+
 
     <include
             android:id="@+id/image_layout"
             android:visibility="gone"
             layout="@layout/image"
     />
+
+    <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:ignore="MissingConstraints">
+    <include
+            android:id="@+id/classmates_layout"
+            android:visibility="gone"
+            layout="@layout/class_mates"
+    />
+
+    </ScrollView>
+    <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:ignore="MissingConstraints">
+    <include
+            android:id="@+id/tutors_layout"
+            android:visibility="gone"
+            layout="@layout/tutors"
+    />
+    </ScrollView>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
