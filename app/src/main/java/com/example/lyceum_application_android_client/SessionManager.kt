@@ -20,7 +20,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
     /**
      * Create login session
      */
-    fun createLoginSession(name: String?, id: String?, schedule1: String?, schedule2: String?, schedule3: String?, schedule4: String?, schedule5: String?) { // Storing login value as TRUE
+    fun createLoginSession(name: String?, id: String?, schedule1: String?, schedule2: String?, schedule3: String?, schedule4: String?, schedule5: String?, page: String?) { // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true)
         // Storing name in pref
         editor.putString(KEY_NAME, name)
@@ -29,6 +29,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         editor.putString(KEY_SCHEDULE_3, schedule3)
         editor.putString(KEY_SCHEDULE_4, schedule4)
         editor.putString(KEY_SCHEDULE_5, schedule5)
+        editor.putString(NEWS_PAGE, page)
         editor.putString(KEY_ID, id)
         // commit changes
         editor.commit()
@@ -65,6 +66,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
             user[KEY_SCHEDULE_3] = pref.getString(KEY_SCHEDULE_3, null)
             user[KEY_SCHEDULE_4] = pref.getString(KEY_SCHEDULE_4, null)
             user[KEY_SCHEDULE_5] = pref.getString(KEY_SCHEDULE_5, null)
+            user[NEWS_PAGE] = pref.getString(NEWS_PAGE, null)
             user[KEY_ID] = pref.getString(KEY_ID, null)
             // return user
             return user
@@ -106,6 +108,7 @@ class SessionManager @SuppressLint("CommitPrefEdits") constructor(// Context
         const val KEY_SCHEDULE_3 = "schedule3"
         const val KEY_SCHEDULE_4 = "schedule4"
         const val KEY_SCHEDULE_5 = "schedule5"
+        const val NEWS_PAGE = "page"
     }
 
     // Constructor
