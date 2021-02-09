@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             handler.insertDays()
             handler.insertSubjects()
             handler.insertSchedule()
+            handler.insertNews()
         }
 
         showHome()
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 val name = login_name.text.toString()
                 val user = handler.getUserByName(name)
                 val schedule = handler.getSchedule(user.classId)
-                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4])
+                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], "0")
                 Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
                 showMain()
             } else {

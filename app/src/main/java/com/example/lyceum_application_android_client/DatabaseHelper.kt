@@ -4,10 +4,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.icu.text.SimpleDateFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.lyceum_application_android_client.models.*
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.random.Random
+import kotlin.time.Clock
 
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, factory, version) {
@@ -25,7 +30,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $NUMBER INTEGER, $LETTER TEXT)"
 
         val CREATE_NEWS_TABLE = "CREATE TABLE $tableNameNews " +
-                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T DATETIME, " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                 "$IS_APPROVED INTEGER, $IS_HIDE INTEGER)"
 
         val CREATE_SUBJECT_TABLE = "CREATE TABLE $tableNameSubject " +
@@ -168,6 +173,32 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
+
+    fun insertNews() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        val query = "select * from $tableNameUser where $ROLE = '1' ;"
+        val cursor = db.rawQuery(query, null)
+        var i = 0
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    val key = i.toString()
+                    values.put(NAME, "username".plus(key))
+                    values.put(TITLE, "Title".plus(key))
+                    values.put(MESSAGE, "NEWS FULL TEXT HERE".plus(key))
+                    values.put(IS_APPROVED, "1")
+                    values.put(IS_HIDE, "0")
+                    db.insert(tableNameNews, null, values)
+                    i++
+                } while (cursor.moveToNext())
+            }
+        }
+
+        cursor.close()
+        db.close()
+    }
+
     fun insertSchedule() {
         val db = writableDatabase
         val queryDays = "select * from $tableNameDays ;"
@@ -218,6 +249,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         values.put(LAST_NAME, last_name )
         values.put(MIDDLE_NAME, middle_name )
         db.insert(tableNameUser, null, values)
+        db.close()
+    }
+
+    fun insertNewsData(name: String, title: String, message: String) {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        values.put(NAME, name )
+        values.put(TITLE, title)
+        values.put(MESSAGE, message )
+        values.put(IS_APPROVED, "1" )
+        values.put(IS_HIDE, "0" )
+        db.insert(tableNameNews, null, values)
         db.close()
     }
 
@@ -531,7 +574,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
             for (key in keys) {
                 val item = schedule[key]
                 if (item != null) {
-                    resultString = resultString.plus(String.format("%s%n%s%n%s%n", item.subject, item.interval, item.room))
+                    resultString = resultString.plus(String.format("%s%n%s%n%s%n", item.subject, item.interval, "КАБ.".plus(item.room)))
                 }
             }
             resultArr[i-1] = resultString
@@ -540,23 +583,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return resultArr
     }
 
-    fun getNews() : Map<String, News>{
+    fun getNews() : Map<Int, News>{
         val db = writableDatabase
-        val query = "select * from $tableNameNews where $IS_HIDE = '0' ;"
+        val query = "select * from $tableNameNews where $IS_HIDE = '0';"
         val cursor = db.rawQuery(query, null)
-        val newsAll = mutableMapOf<String, News>()
+        val newsAll = mutableMapOf<Int, News>()
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
                     val news = News()
-                    val time = cursor.getString(cursor.getColumnIndex(CREATION_T))
-                    news.id = cursor.getInt(cursor.getColumnIndex(ID))
+                    val id = cursor.getInt(cursor.getColumnIndex(ID))
+                    news.id = id
                     news.title = cursor.getString(cursor.getColumnIndex(TITLE))
                     news.message = cursor.getString(cursor.getColumnIndex(MESSAGE))
-                    news.creationTime = time
                     news.isApproved = cursor.getString(cursor.getColumnIndex(IS_APPROVED))
                     news.isHide = cursor.getString(cursor.getColumnIndex(IS_HIDE))
-                    newsAll[time] = news
+                    newsAll[id] = news
                 } while (cursor.moveToNext())
             }
         }
