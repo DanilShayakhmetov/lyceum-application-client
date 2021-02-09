@@ -252,6 +252,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
+    fun insertNewsData(name: String, title: String, message: String) {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        values.put(NAME, name )
+        values.put(TITLE, title)
+        values.put(MESSAGE, message )
+        values.put(IS_APPROVED, "1" )
+        values.put(IS_HIDE, "0" )
+        db.insert(tableNameNews, null, values)
+        db.close()
+    }
+
     fun createImage(id: String, image: String) {
         val db = writableDatabase
         val values: ContentValues = ContentValues()
