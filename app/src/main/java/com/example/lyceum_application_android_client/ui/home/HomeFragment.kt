@@ -13,9 +13,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -50,11 +48,18 @@ class HomeFragment : Fragment() {
         val name: String = session.userDetails.get("name").toString()
         val id: String = session.userDetails.get("id").toString()
         val user: Users  = handler.getUserByName(name)
+        val classMates = handler.getClassMates(user.classId)
+        val teachers = handler.getTeachers()
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val classMatesLayout: TableLayout = root.findViewById(R.id.classmates_layout)
+        val teachersLayout: TableLayout = root.findViewById(R.id.tutors_layout)
+
         val image =  Uri.parse(handler.getImage(id).image)
         root.img_button.setOnClickListener() {
             root.image_layout.visibility = View.VISIBLE
             root.img_button.visibility = View.GONE
+            root.show_tutors_button.visibility = View.GONE
+            root.show_classmates_button.visibility = View.GONE
         }
 
         root.capture_btn.setOnClickListener() {
@@ -85,6 +90,52 @@ class HomeFragment : Fragment() {
             Toast.makeText(context, "Изображение: ".plus(source), Toast.LENGTH_SHORT).show()
             root.image_layout.visibility = View.GONE
         }
+
+        root.show_classmates_button.setOnClickListener() {
+            root.home_fragment_layout.visibility = View.GONE
+            root.classmates_layout.visibility = View.VISIBLE
+
+        }
+
+        root.show_tutors_button.setOnClickListener() {
+            root.home_fragment_layout.visibility = View.GONE
+            root.tutors_layout.visibility = View.VISIBLE
+        }
+
+//        if (classMates.isNotEmpty()) {
+//            for (i in classMates) {
+//                val username = TextView(context)
+//                val email = TextView(context)
+//                val item = i.value
+//                username.text = "".plus(String.format("%s%n", item.lastName.plus(" ").plus(item.firstName).plus(" ").plus(item.middleName)))
+//                username.textSize = 20.23F
+//                email.text = "".plus(String.format("%s%n", item.email))
+//                email.textSize = 15.23F
+//                classMatesLayout.addView(username)
+//                classMatesLayout.addView(email)
+//            }
+//
+//        }
+//
+//        if (teachers.isNotEmpty()) {
+//            for (i in teachers) {
+//                val row = TableRow(context)
+//                val username = TextView(context)
+//                val email = TextView(context)
+//                val item = i.value
+//                username.text = "".plus(String.format("%s%n%s%n%s%n", item.lastName, item.firstName, item.middleName))
+//                username.textSize = 10.23F
+//                email.text = "".plus(String.format("%s%n", item.email))
+//                email.textSize = 10.23F
+//                row.addView(username)
+//                row.addView(email)
+//                teachersLayout.addView(row)
+//            }
+//
+//        }
+
+        initLayout(classMates, classMatesLayout)
+        initLayout(teachers, teachersLayout)
 
         if (user.userName.isNotEmpty()) {
             homeViewModel =
@@ -169,6 +220,24 @@ class HomeFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK){
             //set image captured to image view
             image_view.setImageURI(image_uri)
+        }
+    }
+    private fun initLayout(items: MutableMap<Int, Users>, layout: TableLayout) {
+        if (items.isNotEmpty()) {
+            for (i in items) {
+                val row = TableRow(context)
+                val username = TextView(context)
+                val email = TextView(context)
+                val item = i.value
+                username.text = "".plus(String.format("%s%n%s%n%s%n", item.lastName, item.firstName, item.middleName))
+                username.textSize = 15.23F
+                email.text = "".plus(String.format("%s%n", item.email))
+                email.textSize = 15.23F
+                row.addView(username)
+                row.addView(email)
+                layout.addView(row)
+            }
+
         }
     }
 

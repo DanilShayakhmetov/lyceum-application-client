@@ -346,6 +346,33 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return teachers
     }
 
+    fun getClassMates(class_id: String) : MutableMap  <Int, Users> {
+        val db = writableDatabase
+        val query = "select * from $tableNameUser where $ROLE = '0' and $CLASS_ID = '$class_id';"
+        val teachers = mutableMapOf<Int, Users>()
+        val cursor = db.rawQuery(query, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    var user = Users()
+                    val id = cursor.getInt(cursor.getColumnIndex(ID))
+                    user.id = id
+                    user.userName = cursor.getString(cursor.getColumnIndex(NAME))
+                    user.firstName = cursor.getString(cursor.getColumnIndex(FIRST_NAME))
+                    user.lastName = cursor.getString(cursor.getColumnIndex(LAST_NAME))
+                    user.middleName = cursor.getString(cursor.getColumnIndex(MIDDLE_NAME))
+                    user.email = cursor.getString(cursor.getColumnIndex(EMAIL))
+                    user.classId = cursor.getString(cursor.getColumnIndex(CLASS_ID))
+                    user.roleId = cursor.getString(cursor.getColumnIndex(ROLE))
+                    teachers[id] = user
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        db.close()
+        return teachers
+    }
+
     fun getClasses() : MutableMap  <Int, Classes> {
         val db = writableDatabase
         val query = "select * from $tableNameClass;"
