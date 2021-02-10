@@ -81,36 +81,30 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val query = "select * from $tableNameClass ;"
         val cursor = db.rawQuery(query, null)
         val name = "username"
-        var counter = 0
         if (cursor != null) {
             for(i in 1..cursor.count) {
                 //После тестов можно увеличить
-                for (j in 1..5) {
-                    val n = (counter).toString()
-                    val prefix = name.plus(n)
-                    values.put(NAME, prefix)
-                    values.put(EMAIL, prefix.plus("@email.com"))
+                if (i < 5) {
+                    values.put(NAME, users[i].userName)
+                    values.put(EMAIL, users[i].email)
                     values.put(PASSWORD, "qwe")
                     values.put(CLASS_ID, i)
                     values.put(ROLE, 0)
-                    values.put(FIRST_NAME, prefix.plus("FIRST"))
-                    values.put(LAST_NAME, prefix.plus("LAST"))
-                    values.put(MIDDLE_NAME, prefix.plus("MID"))
-                    counter++
+                    values.put(FIRST_NAME, users[i].email)
+                    values.put(LAST_NAME, users[i].lastName)
+                    values.put(MIDDLE_NAME, users[i].middleName)
+                    db.insert(tableNameUser, null, values)
+                } else if (i < users.size) {
+                    values.put(NAME, users[i].userName)
+                    values.put(EMAIL, users[i].email)
+                    values.put(PASSWORD, "qwe")
+                    values.put(CLASS_ID, i)
+                    values.put(ROLE, 1)
+                    values.put(FIRST_NAME, users[i].email)
+                    values.put(LAST_NAME, users[i].lastName)
+                    values.put(MIDDLE_NAME, users[i].middleName)
                     db.insert(tableNameUser, null, values)
                 }
-                val n = (counter).toString().plus("tutor")
-                val prefix = name.plus(n)
-                values.put(NAME, prefix)
-                values.put(EMAIL, prefix.plus("@email.com"))
-                values.put(PASSWORD, "qwe")
-                values.put(CLASS_ID, i)
-                values.put(ROLE, 1)
-                values.put(FIRST_NAME, prefix.plus("FIRST"))
-                values.put(LAST_NAME, prefix.plus("LAST"))
-                values.put(MIDDLE_NAME, prefix.plus("MID"))
-                counter++
-                db.insert(tableNameUser, null, values)
             }
         }
         cursor.close()
@@ -184,14 +178,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
             if (cursor.moveToFirst()) {
                 do {
                     val key = i.toString()
-                    values.put(NAME, "username".plus(key))
-                    values.put(TITLE, "Title".plus(key))
-                    values.put(MESSAGE, "NEWS FULL TEXT HERE".plus(key))
+                    values.put(NAME, news[i].name)
+                    values.put(TITLE, news[i].title)
+                    values.put(MESSAGE, news[i].message)
                     values.put(IS_APPROVED, "1")
                     values.put(IS_HIDE, "0")
                     db.insert(tableNameNews, null, values)
                     i++
-                } while (cursor.moveToNext())
+                } while (cursor.moveToNext() && news.size < i)
             }
         }
 
