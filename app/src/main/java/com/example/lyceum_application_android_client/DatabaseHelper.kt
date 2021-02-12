@@ -86,29 +86,27 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
             for(i in 1..cursor.count) {
                 //После тестов можно увеличить
                 for (j in 1..5) {
-                    val n = (counter).toString()
-                    val prefix = name.plus(n)
-                    values.put(NAME, prefix)
-                    values.put(EMAIL, prefix.plus("@email.com"))
-                    values.put(PASSWORD, "qwe")
+                    val person = getPerson()
+                    values.put(NAME, person.userName)
+                    values.put(EMAIL, person.email)
+                    values.put(PASSWORD, person.password)
                     values.put(CLASS_ID, i)
                     values.put(ROLE, 0)
-                    values.put(FIRST_NAME, prefix.plus("FIRST"))
-                    values.put(LAST_NAME, prefix.plus("LAST"))
-                    values.put(MIDDLE_NAME, prefix.plus("MID"))
+                    values.put(FIRST_NAME, person.firstName)
+                    values.put(LAST_NAME, person.lastName)
+                    values.put(MIDDLE_NAME, person.middleName)
                     counter++
                     db.insert(tableNameUser, null, values)
                 }
-                val n = (counter).toString().plus("tutor")
-                val prefix = name.plus(n)
-                values.put(NAME, prefix)
-                values.put(EMAIL, prefix.plus("@email.com"))
-                values.put(PASSWORD, "qwe")
+                val person = getPerson()
+                values.put(NAME, name.plus(i))
+                values.put(EMAIL, person.email)
+                values.put(PASSWORD, person.password)
                 values.put(CLASS_ID, i)
                 values.put(ROLE, 1)
-                values.put(FIRST_NAME, prefix.plus("FIRST"))
-                values.put(LAST_NAME, prefix.plus("LAST"))
-                values.put(MIDDLE_NAME, prefix.plus("MID"))
+                values.put(FIRST_NAME, person.firstName)
+                values.put(LAST_NAME, person.lastName)
+                values.put(MIDDLE_NAME, person.middleName)
                 counter++
                 db.insert(tableNameUser, null, values)
             }
@@ -184,9 +182,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
             if (cursor.moveToFirst()) {
                 do {
                     val key = i.toString()
+                    val rand = Random.nextInt(0, TITLES.size)
                     values.put(NAME, "username".plus(key))
-                    values.put(TITLE, "Title".plus(key))
-                    values.put(MESSAGE, "NEWS FULL TEXT HERE".plus(key))
+                    values.put(TITLE, TITLES.get(rand))
+                    values.put(MESSAGE, NEWS.get(rand))
                     values.put(IS_APPROVED, "1")
                     values.put(IS_HIDE, "0")
                     db.insert(tableNameNews, null, values)
@@ -317,8 +316,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
         return resultString
     }
-
-
+    
     fun getTeachers() : MutableMap  <Int, Users> {
         val db = writableDatabase
         val query = "select * from $tableNameUser where $ROLE = '1';"
@@ -652,6 +650,42 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return newsAll
     }
 
+    fun getPerson(): Users {
+        val gender = Random.nextBoolean()
+        val person = Users()
+        if (gender) {
+            var size  = female_firstname.size - 1
+            val randomStr = getRandomString(10)
+            person.userName = randomStr
+            person.firstName = female_firstname.get(Random.nextInt(0,size))
+            size  = female_middlename.size - 1
+            person.middleName =  female_middlename.get(Random.nextInt(0, size))
+            size  = LASTNAMES.size - 1
+            person.lastName = LASTNAMES.get(Random.nextInt(0, size)).plus("а")
+            person.email = randomStr.plus("@email.com")
+            person.password = "qwe"
+        } else {
+            var size  = male_firstname.size - 1
+            val randomStr = getRandomString(10)
+            person.userName = randomStr
+            person.firstName = male_firstname.get(Random.nextInt(0,size))
+            size  = male_middlename.size - 1
+            person.middleName =  male_middlename.get(Random.nextInt(0, size))
+            size  = LASTNAMES.size - 1
+            person.lastName = LASTNAMES.get(Random.nextInt(0, size))
+            person.email = randomStr.plus("@email.com")
+            person.password = "qwe"
+        }
+        return person
+    }
+
+    fun getRandomString(length: Int) : String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
+
     fun testSchedule(): String {
         val db = writableDatabase
         val query = "select * from $tableNameSubject;"
@@ -710,6 +744,102 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private val factory = null
         private const val version = 1
         private const val ID = "id"
+        private val female_firstname = arrayListOf<String>("Анна", "Ольга", "Елена", "Ксения", "Татьяна", "Надежда", "Вера", "Любовь", "Мария", "Светлана", "Наталья", "Валерия", "София", "Ульяна")
+        private val female_middlename = arrayListOf<String>("Николаевна", "Ивановна", "Петровна", "Сидоровна", "Викторовна", "Анатольевна", "Генадьевна", "Игоревна", "Владимировна", "Аркадьевна", "Михайловна", "Васильевна", "Олеговна", "Семеновна")
+        private val LASTNAMES = arrayListOf<String>("Смирнов",
+                "Иванов",
+                "Кузнецов",
+                "Соколов",
+                "Попов",
+                "Лебедев",
+                "Козлов",
+                "Новиков",
+                "Морозов",
+                "Петров",
+                "Волков",
+                "Соловьёв",
+                "Васильев",
+                "Зайцев",
+                "Павлов",
+                "Семёнов",
+                "Голубев",
+                "Виноградов",
+                "Богданов",
+                "Воробьёв",
+                "Фёдоров",
+                "Михайлов",
+                "Беляев",
+                "Тарасов",
+                "Белов",
+                "Комаров",
+                "Орлов",
+                "Киселёв",
+                "Макаров",
+                "Андреев",
+                "Ковалёв",
+                "Ильин",
+                "Гусев",
+                "Титов",
+                "Кузьмин",
+                "Кудрявцев",
+                "Баранов",
+                "Куликов",
+                "Алексеев",
+                "Степанов",
+                "Яковлев")
+        private val male_firstname = arrayListOf<String>("Николай", "Иван", "Петр", "Сидор", "Виктор", "Анатолий", "Генадий", "Игорь", "Владимир", "Аркадий", "Михаил", "Василий", "Олег", "Семен", "Артемий", "Степан", "Андрей", "Эдуард", "Сергей", "Алексей")
+        private val male_middlename = arrayListOf<String>("Николаевич", "Иванович", "Петрович", "Сидорович", "Викторович", "Анатольевич", "Генадьевич", "Игорьевич", "Владимирович", "Аркадьевич", "Михайлович", "Васильевич", "Олегович", "Семенович", "Артемьевич", "Степанович", "Андреевич", "Эдуардович", "Сергеевич", "Алексеевич")
+        private val TITLES = arrayListOf<String>("Мой маленький сад", "Зимняя зелень",
+            "Цитрусовые",
+            "Легенда о клюкве",
+            "Английский завтрак",
+            "Полезные сладости",
+            "Продукты",
+            "Здоровое питание",
+            "Мой завтрак")
+        private val NEWS = arrayListOf<String>("Совсем недавно я решила завести свой собственный сад. Теперь там растут яблони, вишни, кустики крыжовника, смородины и, конечно же, малины! В скором времени мой маленький сад запестрит яркими красками, а стол не обойдётся без блюд из этих замечательных фруктов и ягод.\n" +
+                "\n", "Очень важно зимой есть овощи и фрукты, свежую зелень. Они полезные. Зимой люди очень часто болеют, потому что им не хватает витаминов. Зимой мало светит солнце, а сырая погода разносит болезни.\n" +
+                "\n" +
+                "Хорошо будет покрошить в суп зубок чеснока, потому что чеснок укрепляет иммунитет. В творог можно добавить мелко порубленную петрушку, так ужин станет вкуснее и полезнее.\n" +
+                "\n" +
+                "К обеду можно нарезать свежий огурец вместо солёного из банки. Салат из тёртого яблока и тёртой моркови – отличный завтрак. Поддерживать своё здоровье просто, если делать это постоянно. Не болейте зимой!",
+            "Цитрусовые фрукты – это очень полезные фрукты, потому что в них много витамина C. Витамин C укрепляет здоровье. Какие мы знаем цитрусовые фрукты?\n" +
+                    "\n" +
+                    "Во-первых, апельсины. Апельсиновые деревья растут в Испании везде. Точно так же, как в наших городах растут яблони. Апельсиновые рощи окружают испанские дворцы. Деревья шелестят листьями, плоды распространяют свежий запах. Можно протянуть руку и сорвать с дерева оранжевый апельсин с шершавой кожурой. Маленькое солнце!\n" +
+                    "\n" +
+                    "Без мандаринов нельзя представить Новый год. Сезон мандаринов начинается зимой. Они появляются на прилавках магазинов в конце ноября, и люди начинают улыбаться. Скоро праздник!\n" +
+                    "\n" +
+                    "Лимон никто не станет есть просто так. Его кладут в чай. Нужно отрезать ломтик лимона и растолочь его с сахаром в чашке, потом нужно заварить чёрный чай. Чай должен быть крепкий и сладкий.\n" +
+                    "\n",
+            "Все знают, что клюква растёт на болоте. Чтобы найти её, нужно постараться. Но почему клюква растёт на болоте? Есть легенда.\n" +
+                    "\n" +
+                    "Давным-давно жили в деревне люди. Деревня их стояла совсем рядом с лесом, а в лесу было болото. Люди пахали свои поля, растили на огородах овощи и фрукты. Однажды в их страну пришли захватчики, началась война. Люди решили спрятаться в лесу, на болоте. Они боялись, что враги придут в их деревню и всех убьют. Так и сделали.\n" +
+                    "\n" +
+                    "Вражеские воины на самом деле нашли деревню, но не нашли в ней людей. Тогда они стали искать в лесу и пришли к болоту. А на болоте жили журавли. Журавли дружили с людьми из деревни, вили гнёзда на крышах их домов. Но что же делать? Воины уже достали свои мечи и готовились убить несчастных крестьян.\n" +
+                    "\n" +
+                    "Тогда журавлиная стая взлетела в небо. Они закрыли людей своими большими крыльями. Стрелы попадали в белых птиц, и на болотные кочки падали красные капли крови. Эти капли превратились в ягоды. В клюкву.",
+            "Англичане завтракают со знанием дела. В Англии принято вставать очень рано, в шесть утра. Ещё в постели англичане выпивают чашку чая, а только потом начинают одеваться.\n" +
+                    "\n" +
+                    "Англичане завтракают в восемь утра. Им нужно плотно поесть, потому что обед будет нескоро. На столе стоит много разной еды. Обязательно англичане съедают на завтрак вареное яйцо. Яйцо может быть сварено вкрутую или всмятку. Его подают на специальной подставке.\n" +
+                    "\n" +
+                    "Ещё на завтрак едят яичницу, к которой подают жареные сардельки или бекон. Англичане очень любят овсяную кашу, в неё добавляют масло и какое-нибудь варенье. Вместо каши англичане могут есть на завтрак пудинг.\n" +
+                    "\n" +
+                    "Ещё англичане едят тосты с джемом. Раньше в богатых домах всегда была специальная кухарка, которая умела правильно поджаривать хлеб для тостов.\n" +
+                    "\n" +
+                    "На завтрак англичане обязательно выпивают стакан апельсинового сока, чашку чая или кофе.",
+
+            "Наверное, нет такого человека, который не любит сладкое. Все хотят съесть десерт после обеда или после ужина. Так приятно заварить ароматный чай или сварить горячее какао и побаловать себя. Но ещё все знают, что есть слишком много сладкого – это вредно.\n" +
+                    "\n" +
+                    "Но есть полезные сладости! Например, чёрный шоколад. Чёрный шоколад называют горьким шоколадом. Он полезен для сердца и для нервов. Кроме того, чёрный шоколад помогает крови легче бежать по венам.\n" +
+                    "\n" +
+                    "Мармелад делают из слив или из яблок. Мармелад тоже полезен. Он укрепляет желудок. Врачи советуют есть мармелад после болезней и после нагрузок.",
+            "Еда — основа нашей жизни, потому что человеческий организм не может существовать без неё. Разнообразие продуктов, доступных в современных супермаркетах, впечатляет. В разных отделах магазина мы можем купить различные виды продуктов, например фрукты, овощи, молочные продукты, хлебобулочные изделия, бакалейные товары, напитки.",
+            "Если мы хотим прожить долгую жизнь, нам следует следить за тем, что мы едим. Здоровое питание обычно включает в себя большое количество фруктов и овощей, регулярное употребление рыбы и белого мяса, злаков, орехов и несколько литров воды в день. Лучше выбирать продукты, не содержащие искусственные добавки, и с минимальным количеством сахара.",
+            "Я завтракаю в 7 часов. Мой завтрак всегда плотный и обычно состоит из яичницы и бекона, бутербродов с маслом и сыром или колбасой. Потом я пью чай или кофе и иду в школу.\n" +
+                    "\n")
+
+        
+        
         //class_schedule
         private const val TEACHER_ID = "TeacherId"
         private const val CLASS_ID = "ClassId"
