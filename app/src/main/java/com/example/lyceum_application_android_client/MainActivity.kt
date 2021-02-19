@@ -1,9 +1,12 @@
 package com.example.lyceum_application_android_client
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +17,8 @@ import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
+import java.util.*
+import kotlin.concurrent.timerTask
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var handler: DatabaseHelper
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
+    lateinit var session: SessionManager
+    lateinit var context: Context
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +36,8 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         // Session Manager
-        val context = applicationContext
-        val session = SessionManager(context);
+        context = applicationContext
+        session = SessionManager(context);
 
         handler = DatabaseHelper(this)
         pref = session.pref
@@ -65,17 +72,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         login_button.setOnClickListener() {
-            if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
-                val name = login_name.text.toString()
-                val user = handler.getUserByName(name)
-                val schedule = handler.getSchedule(user.classId)
-                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], "0")
-                Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
-                showMain()
-            } else {
-                Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
-                showRegister()
-            }
+            val handler = Handler()
+            progressBar.visibility = View.VISIBLE
+            closeKeyBoard()
+            handler.postDelayed({onLoginAction()}, 1000)
         }
 
 
@@ -107,7 +107,36 @@ class MainActivity : AppCompatActivity() {
         navigation.visibility = View.GONE
     }
 
+    private fun onLoginAction() {
+        if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
+            val name = login_name.text.toString()
+            val user = handler.getUserByName(name)
+            val schedule = handler.getSchedule(user.classId)
+            session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], "0")
+            Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
+            showMain()
+        } else {
+            Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
+            showRegister()
+        }
+    }
+
+    private fun closeKeyBoard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     private fun showMain() {
+        login_layout.visibility = View.GONE
+        register_layout.visibility = View.GONE
+        home_ll.visibility = View.GONE
+        navigation.visibility = View.VISIBLE
+    }
+
+    private fun showProgress() {
         login_layout.visibility = View.GONE
         register_layout.visibility = View.GONE
         home_ll.visibility = View.GONE
