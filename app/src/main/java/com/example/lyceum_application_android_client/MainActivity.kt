@@ -8,17 +8,15 @@ import android.os.Handler
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
-import java.util.*
-import kotlin.concurrent.timerTask
 
 
 class MainActivity : AppCompatActivity() {
@@ -109,12 +107,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onLoginAction() {
         if (handler.userPresent(login_name.text.toString(), login_password.text.toString())) {
+            val navView: BottomNavigationView = findViewById(R.id.nav_view)
             val name = login_name.text.toString()
             val user = handler.getUserByName(name)
             val schedule = handler.getSchedule(user.classId)
             session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], "0")
             Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
             showMain()
+            navView.menu.performIdentifierAction(R.id.navigation_home, 0)
         } else {
             Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
             showRegister()
@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         home_ll.visibility = View.GONE
         navigation.visibility = View.VISIBLE
     }
+
 
     private fun showProgress() {
         login_layout.visibility = View.GONE
