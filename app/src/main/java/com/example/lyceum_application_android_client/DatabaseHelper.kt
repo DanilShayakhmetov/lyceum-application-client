@@ -629,7 +629,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
     fun getNews() : Map<Int, News>{
         val db = writableDatabase
-        val query = "select * from $tableNameNews where $IS_HIDE = '0';"
+        val query = "select * from $tableNameNews where $IS_HIDE = '0' order by id desc;"
         val cursor = db.rawQuery(query, null)
         val newsAll = mutableMapOf<Int, News>()
         if (cursor != null) {
