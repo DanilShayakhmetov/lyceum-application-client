@@ -57,8 +57,8 @@ class HomeFragment : Fragment() {
         val teachersLayout: TableLayout = root.findViewById(R.id.tutors_layout)
         val image =  Uri.parse(handler.getImage(id).image)
 
-        if (role === "1") {
-            root.show_tutors_button.text = "Коллеги".plus(role)
+        if (role == "1") {
+            root.show_tutors_button.text = "Коллеги"
             root.show_classmates_button.text = "Ученники"
         } else {
             root.show_tutors_button.text = "Учителя"

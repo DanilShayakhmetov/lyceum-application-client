@@ -116,10 +116,10 @@ class MainActivity : AppCompatActivity() {
             val user = handler.getUserByName(name)
             val classId = user.classId
             val schedule = handler.getSchedule(classId)
-            if (!session.isLoggedIn) {
+//            if (!session.isLoggedIn) {
                 session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], classId)
                 Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
-            }
+//            }
             showMain()
             navView.menu.performIdentifierAction(R.id.navigation_home, 0)
         } else {

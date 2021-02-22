@@ -89,7 +89,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     values.put(EMAIL, person.email)
                     values.put(PASSWORD, person.password)
                     values.put(CLASS_ID, i)
-                    values.put(ROLE, 0)
+                    values.put(ROLE, "0")
                     values.put(FIRST_NAME, person.firstName)
                     values.put(LAST_NAME, person.lastName)
                     values.put(MIDDLE_NAME, person.middleName)
@@ -101,7 +101,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                 values.put(EMAIL, person.email)
                 values.put(PASSWORD, person.password)
                 values.put(CLASS_ID, i)
-                values.put(ROLE, 1)
+                values.put(ROLE, "1")
                 values.put(FIRST_NAME, person.firstName)
                 values.put(LAST_NAME, person.lastName)
                 values.put(MIDDLE_NAME, person.middleName)
@@ -688,7 +688,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val person = Users()
         if (gender) {
             var size  = female_firstname.size - 1
-            val randomStr = getRandomString(10)
+            val randomStr = getRandomString(5)
             person.userName = randomStr
             person.firstName = female_firstname.get(Random.nextInt(0,size))
             size  = female_middlename.size - 1
