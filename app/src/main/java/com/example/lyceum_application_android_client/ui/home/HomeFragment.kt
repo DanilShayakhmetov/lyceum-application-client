@@ -25,6 +25,7 @@ import com.example.lyceum_application_android_client.SessionManager
 import com.example.lyceum_application_android_client.models.Images
 import com.example.lyceum_application_android_client.models.Users
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.image.*
 import kotlinx.android.synthetic.main.image.view.*
@@ -48,13 +49,22 @@ class HomeFragment : Fragment() {
         val name: String = session.userDetails.get("name").toString()
         val id: String = session.userDetails.get("id").toString()
         val user: Users  = handler.getUserByName(name)
+        val role: String = user.roleId
         val classMates = handler.getClassMates(user.classId)
         val teachers = handler.getTeachers()
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val classMatesLayout: TableLayout = root.findViewById(R.id.classmates_layout)
         val teachersLayout: TableLayout = root.findViewById(R.id.tutors_layout)
-
         val image =  Uri.parse(handler.getImage(id).image)
+
+        if (role == "1") {
+            root.show_tutors_button.text = "Коллеги"
+            root.show_classmates_button.text = "Ученники"
+        } else {
+            root.show_tutors_button.text = "Учителя"
+            root.show_classmates_button.text = "Одноклассники"
+        }
+
         root.img_button.setOnClickListener() {
             root.image_layout.visibility = View.VISIBLE
             root.img_button.visibility = View.GONE
