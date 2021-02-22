@@ -2,17 +2,11 @@ package com.example.lyceum_application_android_client
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.icu.text.SimpleDateFormat
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.lyceum_application_android_client.models.*
-import java.time.LocalDateTime
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.random.Random
-import kotlin.time.Clock
 
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, factory, version) {
@@ -45,10 +39,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val CREATE_DAYS_TABLE = "CREATE TABLE $tableNameDays " +
                 "($ID Integer PRIMARY KEY, $NAME TEXT)"
 
+        val CREATE_NEWS_CLASS_TABLE = "CREATE TABLE $tableNameNewsClass " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $CLASS_ID INTEGER, $NEWS_ID INTEGER)"
+
         db!!.execSQL(CREATE_USER_TABLE)
         db.execSQL(CREATE_SCHEDULE_TABLE)
         db.execSQL(CREATE_CLASS_TABLE)
         db.execSQL(CREATE_NEWS_TABLE)
+        db.execSQL(CREATE_NEWS_CLASS_TABLE)
         db.execSQL(CREATE_SUBJECT_TABLE)
         db.execSQL(CREATE_INTERVALS_TABLE)
         db.execSQL(CREATE_DAYS_TABLE)
@@ -171,7 +169,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
-
     fun insertNews() {
         val db = writableDatabase
         val values: ContentValues = ContentValues()
@@ -195,6 +192,34 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         }
 
         cursor.close()
+        db.close()
+    }
+
+    fun insertNewsClass() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        val newsQuery = "select * from $tableNameNews;"
+        val classQuery = "select * from $tableNameClass;"
+        val newsCursor = db.rawQuery(newsQuery, null)
+        val classCursor = db.rawQuery(classQuery, null)
+        var i = 0
+        if (newsCursor != null && classCursor != null) {
+            if (classCursor.moveToFirst()) {
+                do {
+                    for (j in 0..10) {
+                        val key = i.toString()
+                        val rand = Random.nextInt(0, newsCursor.count)
+                        values.put(NEWS_ID, rand)
+                        values.put(CLASS_ID, classCursor.getInt(classCursor.getColumnIndex(ID)))
+                        db.insert(tableNameNewsClass, null, values)
+                        i++
+                    }
+                } while (classCursor.moveToNext())
+            }
+        }
+
+        classCursor.close()
+        newsCursor.close()
         db.close()
     }
 
@@ -251,15 +276,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
-    fun insertNewsData(name: String, title: String, message: String) {
+    fun insertNewsData(name: String, title: String, message: String, class_id: String) {
         val db = writableDatabase
-        val values: ContentValues = ContentValues()
-        values.put(NAME, name )
-        values.put(TITLE, title)
-        values.put(MESSAGE, message )
-        values.put(IS_APPROVED, "1" )
-        values.put(IS_HIDE, "0" )
-        db.insert(tableNameNews, null, values)
+        val newsContentValues = ContentValues()
+        val classContentValues = ContentValues()
+        newsContentValues.put(NAME, name )
+        newsContentValues.put(TITLE, title)
+        newsContentValues.put(MESSAGE, message )
+        newsContentValues.put(IS_APPROVED, "1" )
+        newsContentValues.put(IS_HIDE, "0" )
+        db.insert(tableNameNews, null, newsContentValues)
+        val query = "select last_insert_rowid();"
+        val cur: Cursor = db.rawQuery(query, null)
+        cur.moveToFirst()
+        val newsId: Int = cur.getInt(0)
+        classContentValues.put(NEWS_ID, newsId)
+        classContentValues.put(CLASS_ID, class_id)
+        db.insert(tableNameNewsClass, null, classContentValues)
         db.close()
     }
 
@@ -625,9 +658,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return resultArr
     }
 
-    fun getNews() : Map<Int, News>{
+    fun getNews(class_id: String) : Map<Int, News>{
         val db = writableDatabase
-        val query = "select * from $tableNameNews where $IS_HIDE = '0' order by id desc;"
+        val query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' order by id desc;"
         val cursor = db.rawQuery(query, null)
         val newsAll = mutableMapOf<Int, News>()
         if (cursor != null) {
@@ -737,6 +770,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private const val tableNameClass = "class"
         private const val tableNameSchedule = "schedule"
         private const val tableNameNews = "news"
+        private const val tableNameNewsClass = "news_class"
         private const val tableNameSubject = "subject"
         private const val tableNameInterval = "interval"
         private const val tableNameDays = "days"
@@ -847,6 +881,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private const val SUBJECT_ID = "SubjectId"
         private const val DAY_ID = "DayId"
         private const val INTERVAL_ID = "IntervalId"
+        private const val NEWS_ID = "NewsId"
         //users
         private const val NAME = "Name"
         private const val EMAIL = "Email"

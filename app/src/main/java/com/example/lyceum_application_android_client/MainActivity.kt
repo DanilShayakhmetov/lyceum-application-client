@@ -15,6 +15,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.register.*
 
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         pref = session.pref
         editor = pref.edit();
 
+
         if (handler.getClasses().isEmpty()) {
             handler.insertClasses()
             handler.insertUsers()
@@ -49,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             handler.insertSubjects()
             handler.insertSchedule()
             handler.insertNews()
+            handler.insertNewsClass()
         }
 
         showHome()
@@ -66,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             handler.insertUserData(register_name.text.toString(), register_email.text.toString(), register_password.text.toString(),
                 register_class.text.toString(),  register_role.text.toString(), register_first.text.toString(),
                 register_middle.text.toString(), register_last.text.toString())
-            showHome()
+                showHome()
         }
 
         login_button.setOnClickListener() {
@@ -110,9 +114,10 @@ class MainActivity : AppCompatActivity() {
             val navView: BottomNavigationView = findViewById(R.id.nav_view)
             val name = login_name.text.toString()
             val user = handler.getUserByName(name)
-            val schedule = handler.getSchedule(user.classId)
+            val classId = user.classId
+            val schedule = handler.getSchedule(classId)
             if (!session.isLoggedIn) {
-                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], "0")
+                session.createLoginSession(login_name.text.toString(), user.id.toString(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], classId)
                 Toast.makeText(this, "login ${user.userName} success!",  Toast.LENGTH_SHORT).show()
             }
             showMain()

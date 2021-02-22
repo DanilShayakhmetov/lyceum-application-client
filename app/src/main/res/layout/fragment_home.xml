@@ -84,18 +84,20 @@
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
                     tools:ignore="MissingConstraints">
+
                 <Button
                         android:id="@+id/show_tutors_button"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="Учителя"
+                        android:text=""
                 />
                 <Button
                         android:id="@+id/show_classmates_button"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="Одноклассники"
+                        android:text=""
                 />
+
             </LinearLayout>
         </TableRow>
     </TableLayout>
