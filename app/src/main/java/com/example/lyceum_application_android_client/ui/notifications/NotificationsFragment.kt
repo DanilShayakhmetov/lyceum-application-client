@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isNotEmpty
@@ -70,6 +71,7 @@ class NotificationsFragment : Fragment() {
             for (i in news) {
                 val newsTitle = TextView(context)
                 val newsContent = TextView(context)
+                val changeVisibility = Button(context)
                 val newsItem = i.value
                 newsTitle.text = "".plus(String.format("%s%n", newsItem.title))
                 newsTitle.textSize = 35.23F
@@ -77,13 +79,34 @@ class NotificationsFragment : Fragment() {
                 newsContent.textSize = 20.23F
                 newsLayout.addView(newsTitle)
                 newsLayout.addView(newsContent)
+                if (role == "1") {
+                    changeVisibility.text = "изменить видимость".plus(newsItem.id.toString())
+                    changeVisibility.textSize = 15.23F
+                    changeVisibility.width = 15
+                    changeVisibility.id = newsItem.id
+                    newsLayout.addView(changeVisibility)
+                    changeVisibility.setOnClickListener() {
+                        root.change_news_visibility_layout.visibility = View.VISIBLE
+                        root.root_layout.visibility = View.GONE
+                        root.add_news_button.visibility = View.GONE
+
+                    }
+                }
             }
 
+
         }
+
+
         return root
     }
 
     fun addNews(root: View, name: String, class_id: String) {
+        val addNews: LinearLayout = root.findViewById(R.id.add_news_layout)
+        handler.insertNewsData(name, addNews.add_news_title.text.toString(), addNews.add_news_body.text.toString(), class_id)
+    }
+
+    fun changeNewsVisibility(root: View, name: String, class_id: String) {
         val addNews: LinearLayout = root.findViewById(R.id.add_news_layout)
         handler.insertNewsData(name, addNews.add_news_title.text.toString(), addNews.add_news_body.text.toString(), class_id)
     }

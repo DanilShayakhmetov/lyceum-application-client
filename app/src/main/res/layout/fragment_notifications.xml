@@ -12,29 +12,37 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="150px"
+            android:layout_margin="50dp"
             android:text="Добавить новость"
-            tools:ignore="MissingConstraints" android:layout_marginStart="150px">
+            tools:ignore="MissingConstraints">
     </Button>
     <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="30dp"
             tools:ignore="MissingConstraints">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_margin="30dp"
                 android:id="@+id/root_layout">
         </LinearLayout>
     </ScrollView>
-
 
     <include
             android:id="@+id/add_news_layout"
             android:visibility="gone"
             layout="@layout/add_news"
     />
+
+    <include
+            android:id="@+id/change_news_visibility_layout"
+            android:visibility="gone"
+            layout="@layout/change_news_visibility"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
