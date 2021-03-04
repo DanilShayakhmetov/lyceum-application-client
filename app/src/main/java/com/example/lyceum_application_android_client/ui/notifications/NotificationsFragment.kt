@@ -1,5 +1,6 @@
 package com.example.lyceum_application_android_client.ui.notifications
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.lyceum_application_android_client.DatabaseHelper
@@ -24,6 +26,7 @@ class NotificationsFragment : Fragment() {
     private lateinit var notificationsViewModel: NotificationsViewModel
     lateinit var handler: DatabaseHelper
 
+    @SuppressLint("ResourceType")
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -62,6 +65,7 @@ class NotificationsFragment : Fragment() {
 
             }
         }
+
         if (news.isNotEmpty()) {
             for (i in news) {
                 val newsTitle = TextView(context)
