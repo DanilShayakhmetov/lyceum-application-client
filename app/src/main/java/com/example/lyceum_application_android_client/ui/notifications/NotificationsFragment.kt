@@ -54,7 +54,7 @@ class NotificationsFragment : Fragment() {
         newsLayout.setPadding(20,100,0,0)
 
         if (role == "0") {
-            root.add_news_button.visibility = View.GONE
+//            root.add_news_button.visibility = View.GONE
             news = getFiltered(news,classId)
         } else {
             root.add_news_button.setOnClickListener() {

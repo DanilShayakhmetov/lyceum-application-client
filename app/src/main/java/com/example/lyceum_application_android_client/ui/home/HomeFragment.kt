@@ -72,6 +72,10 @@ class HomeFragment : Fragment() {
             root.show_classmates_button.visibility = View.GONE
         }
 
+        root.logout_button.setOnClickListener() {
+            session.logoutUser()
+        }
+
         root.capture_btn.setOnClickListener() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if (checkSelfPermission(context, Manifest.permission.CAMERA)

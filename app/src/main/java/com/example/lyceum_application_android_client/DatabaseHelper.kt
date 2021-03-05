@@ -302,7 +302,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         newsContentValues.put(MESSAGE, message )
         newsContentValues.put(IS_APPROVED, "1" )
         newsContentValues.put(IS_HIDE, "0" )
-        newsContentValues.put(VISIBILITY_ID, "1" )
+        newsContentValues.put(VISIBILITY_ID, "4" )
         db.insert(tableNameNews, null, newsContentValues)
         val query = "select last_insert_rowid();"
         val cur: Cursor = db.rawQuery(query, null)
