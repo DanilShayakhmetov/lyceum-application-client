@@ -27,7 +27,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
         val CREATE_NEWS_TABLE = "CREATE TABLE $tableNameNews " +
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                "$IS_APPROVED INTEGER, $IS_HIDE INTEGER, $VISIBILITY_ID INTEGER)"
+                "$IS_APPROVED INTEGER, $IS_HIDE INTEGER, $VISIBILITY_ID TEXT)"
 
         val CREATE_SUBJECT_TABLE = "CREATE TABLE $tableNameSubject " +
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TEACHER_ID INTEGER)"
@@ -293,16 +293,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
     }
 
-    fun insertNewsData(name: String, title: String, message: String, class_id: String) {
+    fun insertNewsData(name: String, title: String, message: String, class_id: String, role: String) {
         val db = writableDatabase
         val newsContentValues = ContentValues()
         val classContentValues = ContentValues()
+        var visibility = ""
+        if (role == "0") {
+            visibility = "4";
+        } else {
+            visibility = "1"
+        }
         newsContentValues.put(NAME, name )
         newsContentValues.put(TITLE, title)
         newsContentValues.put(MESSAGE, message )
         newsContentValues.put(IS_APPROVED, "1" )
         newsContentValues.put(IS_HIDE, "0" )
-        newsContentValues.put(VISIBILITY_ID, "4" )
+        newsContentValues.put(VISIBILITY_ID,  visibility )
         db.insert(tableNameNews, null, newsContentValues)
         val query = "select last_insert_rowid();"
         val cur: Cursor = db.rawQuery(query, null)
@@ -689,7 +695,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     fun getNews(role: String) : Map<Int, News>{
         val db = writableDatabase
         var query= ""
-        if (role === "0") {
+        if (role == "0") {
 //            query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' and n.VisibilityId != '2' order by n.id desc;"
             query = "select * from $tableNameNews where VisibilityId = '1' or VisibilityId = '3' or VisibilityId = '4' order by id desc;"
         } else {

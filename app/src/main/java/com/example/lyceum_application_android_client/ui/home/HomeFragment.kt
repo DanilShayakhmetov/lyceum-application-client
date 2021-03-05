@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
 
         if (role == "1") {
             root.show_tutors_button.text = "Коллеги"
-            root.show_classmates_button.text = "Ученники"
+            root.show_classmates_button.text = "Ученики"
         } else {
             root.show_tutors_button.text = "Учителя"
             root.show_classmates_button.text = "Одноклассники"

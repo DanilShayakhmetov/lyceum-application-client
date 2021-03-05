@@ -68,7 +68,7 @@ class NotificationsFragment : Fragment() {
                 root.root_layout.visibility = View.VISIBLE
                 root.add_news_button.visibility = View.VISIBLE
                 root.add_news_layout.visibility = View.GONE
-                addNews(root, name, classId)
+                addNews(root, name, classId, role)
                 hideKeyboardFrom(context, root)
 
             }
@@ -123,9 +123,9 @@ class NotificationsFragment : Fragment() {
         return root
     }
 
-    fun addNews(root: View, name: String, class_id: String) {
+    fun addNews(root: View, name: String, class_id: String, role: String) {
         val addNews: LinearLayout = root.findViewById(R.id.add_news_layout)
-        handler.insertNewsData(name, addNews.add_news_title.text.toString(), addNews.add_news_body.text.toString(), class_id)
+        Log.d("TAG", handler.insertNewsData(name, addNews.add_news_title.text.toString(), addNews.add_news_body.text.toString(), class_id, role).toString())
     }
 
     fun getFiltered(news: Map <Int, News>, class_id: String): MutableMap<Int, News> {

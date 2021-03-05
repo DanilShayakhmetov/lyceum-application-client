@@ -22,7 +22,7 @@
                 android:id="@+id/news_show_students"
                 android:layout_height="74dp"
                 android:layout_width="100dp"
-                android:text="всем ученникам"
+                android:text="всем ученикам"
         />
         <Button
                 android:id="@+id/news_show_teachers"
@@ -40,7 +40,7 @@
                 android:id="@+id/news_show_all"
                 android:layout_height="96dp"
                 android:layout_width="100dp"
-                android:text="моим ученникам"
+                android:text="моим ученикам"
         />
     </LinearLayout>
 
