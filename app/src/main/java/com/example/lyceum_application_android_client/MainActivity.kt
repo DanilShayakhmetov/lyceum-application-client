@@ -126,8 +126,9 @@ class MainActivity : AppCompatActivity() {
             showMain()
             navView.menu.performIdentifierAction(R.id.navigation_home, 0)
         } else {
+            login_layout.visibility= View.GONE
+            home_ll.visibility= View.VISIBLE
             Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
-            showRegister()
         }
     }
 

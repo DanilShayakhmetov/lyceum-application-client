@@ -501,7 +501,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     fun getUserByName(name: String) : Users {
         val db = writableDatabase
         val query = "select * from $tableNameUser where $NAME = '$name';"
-        var user = Users()
+        val user = Users()
         val cursor = db.rawQuery(query, null)
         if (cursor != null) {
             if (cursor.moveToFirst()) {
