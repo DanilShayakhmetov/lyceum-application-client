@@ -7,6 +7,7 @@ class News {
     var creationTime = "";
     var isApproved = "";
     var isHide = "";
+    var visibilityId = "";
 }
 
 

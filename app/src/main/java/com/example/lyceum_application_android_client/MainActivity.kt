@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (handler.getClasses().isEmpty()) {
+            handler.insertVisibility()
             handler.insertClasses()
             handler.insertUsers()
             handler.insertIntervals()
