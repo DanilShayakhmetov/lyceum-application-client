@@ -15,6 +15,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.add_news.*
+import kotlinx.android.synthetic.main.add_news.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.login.*
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (handler.getClasses().isEmpty()) {
+            handler.insertVisibility()
             handler.insertClasses()
             handler.insertUsers()
             handler.insertIntervals()
@@ -123,8 +126,9 @@ class MainActivity : AppCompatActivity() {
             showMain()
             navView.menu.performIdentifierAction(R.id.navigation_home, 0)
         } else {
+            login_layout.visibility= View.GONE
+            home_ll.visibility= View.VISIBLE
             Toast.makeText(this, "username or password is incorrect", Toast.LENGTH_SHORT).show()
-            showRegister()
         }
     }
 

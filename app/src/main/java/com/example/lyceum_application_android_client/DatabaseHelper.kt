@@ -1,10 +1,12 @@
 package com.example.lyceum_application_android_client
 
+import android.app.DownloadManager.COLUMN_ID
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.lyceum_application_android_client.models.*
 import kotlin.random.Random
 
@@ -25,7 +27,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
 
         val CREATE_NEWS_TABLE = "CREATE TABLE $tableNameNews " +
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TITLE TEXT, $MESSAGE TEXT, $CREATION_T TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                "$IS_APPROVED INTEGER, $IS_HIDE INTEGER)"
+                "$IS_APPROVED INTEGER, $IS_HIDE INTEGER, $VISIBILITY_ID INTEGER)"
 
         val CREATE_SUBJECT_TABLE = "CREATE TABLE $tableNameSubject " +
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $TEACHER_ID INTEGER)"
@@ -42,6 +44,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         val CREATE_NEWS_CLASS_TABLE = "CREATE TABLE $tableNameNewsClass " +
                 "($ID Integer PRIMARY KEY AUTOINCREMENT, $CLASS_ID INTEGER, $NEWS_ID INTEGER)"
 
+        val CREATE_VISIBILTY_TABLE = "CREATE TABLE $tableNameVisibility " +
+                "($ID Integer PRIMARY KEY AUTOINCREMENT, $VISIBILITY TEXT)"
+
         db!!.execSQL(CREATE_USER_TABLE)
         db.execSQL(CREATE_SCHEDULE_TABLE)
         db.execSQL(CREATE_CLASS_TABLE)
@@ -51,10 +56,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.execSQL(CREATE_INTERVALS_TABLE)
         db.execSQL(CREATE_DAYS_TABLE)
         db.execSQL(CREATE_IMAGE_TABLE)
+        db.execSQL(CREATE_VISIBILTY_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // Called when the database needs to be upgraded
+    }
+
+    fun insertVisibility() {
+        val db = writableDatabase
+        val values: ContentValues = ContentValues()
+        for (status in STATUSES) {
+            values.put(VISIBILITY, status)
+            db.insert(tableNameVisibility, null, values)
+        }
+        db.close()
     }
 
     fun insertClasses() {
@@ -185,6 +201,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     values.put(MESSAGE, NEWS.get(rand))
                     values.put(IS_APPROVED, "1")
                     values.put(IS_HIDE, "0")
+                    values.put(VISIBILITY_ID, "1")
                     db.insert(tableNameNews, null, values)
                     i++
                 } while (cursor.moveToNext())
@@ -285,6 +302,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         newsContentValues.put(MESSAGE, message )
         newsContentValues.put(IS_APPROVED, "1" )
         newsContentValues.put(IS_HIDE, "0" )
+        newsContentValues.put(VISIBILITY_ID, "4" )
         db.insert(tableNameNews, null, newsContentValues)
         val query = "select last_insert_rowid();"
         val cur: Cursor = db.rawQuery(query, null)
@@ -293,6 +311,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         classContentValues.put(NEWS_ID, newsId)
         classContentValues.put(CLASS_ID, class_id)
         db.insert(tableNameNewsClass, null, classContentValues)
+        db.close()
+    }
+
+    fun updateNewsVisibility(news_id: String, visibility_id: String) {
+        val db = writableDatabase
+        val visibilityContentValues = ContentValues()
+        visibilityContentValues.put(VISIBILITY_ID, visibility_id)
+        val whereclause = "$ID=?"
+        val whereargs = arrayOf(news_id)
+        Log.d("TAG", db.update(tableNameNews, visibilityContentValues, whereclause, whereargs).toString())
         db.close()
     }
 
@@ -473,7 +501,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
     fun getUserByName(name: String) : Users {
         val db = writableDatabase
         val query = "select * from $tableNameUser where $NAME = '$name';"
-        var user = Users()
+        val user = Users()
         val cursor = db.rawQuery(query, null)
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -658,9 +686,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         return resultArr
     }
 
-    fun getNews(class_id: String) : Map<Int, News>{
+    fun getNews(role: String) : Map<Int, News>{
         val db = writableDatabase
-        val query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' order by id desc;"
+        var query= ""
+        if (role === "0") {
+//            query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' and n.VisibilityId != '2' order by n.id desc;"
+            query = "select * from $tableNameNews where VisibilityId = '1' or VisibilityId = '3' or VisibilityId = '4' order by id desc;"
+        } else {
+//            query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' and n.VisibilityId != '3' order by n.id desc;"
+            query = "select * from $tableNameNews where VisibilityId = '1' or VisibilityId = '2' order by id desc;"
+        }
         val cursor = db.rawQuery(query, null)
         val newsAll = mutableMapOf<Int, News>()
         if (cursor != null) {
@@ -673,6 +708,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
                     news.message = cursor.getString(cursor.getColumnIndex(MESSAGE))
                     news.isApproved = cursor.getString(cursor.getColumnIndex(IS_APPROVED))
                     news.isHide = cursor.getString(cursor.getColumnIndex(IS_HIDE))
+                    news.visibilityId = cursor.getString(cursor.getColumnIndex(VISIBILITY_ID))
                     newsAll[id] = news
                 } while (cursor.moveToNext())
             }
@@ -681,6 +717,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         db.close()
 
         return newsAll
+    }
+
+    fun getNewsID(class_id: String): IntArray {
+        val db = writableDatabase
+        val query = "select * from $tableNameNews as n inner join $tableNameNewsClass as cn on n.id = cn.NewsId where cn.ClassId = '$class_id' and n.VisibilityId != '2' order by n.id desc;"
+        val cursor = db.rawQuery(query, null)
+        val resultArray = IntArray(cursor.count)
+        var counter = 0
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    resultArray[counter] = cursor.getInt(cursor.getColumnIndex(ID))
+                    counter += 1
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return resultArray
     }
 
     fun getPerson(): Users {
@@ -775,6 +831,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         private const val tableNameInterval = "interval"
         private const val tableNameDays = "days"
         private const val tableNameImages = "image"
+        private const val tableNameVisibility = "visibility"
         private val factory = null
         private const val version = 1
         private const val ID = "id"
@@ -905,5 +962,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, facto
         //images
         private const val IMG = "Image"
         private const val USER_ID = "UserId"
+        //visibility
+        private const val VISIBILITY = "Visibility"
+        private const val VISIBILITY_ID = "VisibilityId"
+        //visibility status
+        private val STATUSES = arrayListOf<String>("ALL", "TEACHERS", "STUDENTS", "MY_STUDENTS")
+
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="197dp"
+            android:layout_weight="1"
+            android:text="Выберите видимость новости"
+            android:textSize="50dp"
+            android:textStyle="bold"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="485dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints">
+        <Button
+                android:id="@+id/news_show_students"
+                android:layout_height="74dp"
+                android:layout_width="100dp"
+                android:text="всем ученникам"
+        />
+        <Button
+                android:id="@+id/news_show_teachers"
+                android:layout_height="63dp"
+                android:layout_width="100dp"
+                android:text="учителям"
+        />
+        <Button
+                android:id="@+id/news_show_my_students"
+                android:layout_height="63dp"
+                android:layout_width="100dp"
+                android:text="всем"
+        />
+        <Button
+                android:id="@+id/news_show_all"
+                android:layout_height="96dp"
+                android:layout_width="100dp"
+                android:text="моим ученникам"
+        />
+    </LinearLayout>
+
+</LinearLayout>
