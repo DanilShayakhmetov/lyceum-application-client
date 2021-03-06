@@ -42,6 +42,7 @@ class NotificationsFragment : Fragment() {
                 ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_notifications, container, false)
         val newsLayout: LinearLayout = root.findViewById(R.id.root_layout)
+        val changeVisibilityLayout: LinearLayout = root.findViewById(R.id.change_news_visibility_layout)
         val context = inflater.context
         handler = DatabaseHelper(context)
         val session = SessionManager(context)
@@ -80,10 +81,12 @@ class NotificationsFragment : Fragment() {
 
 
         if (news.isNotEmpty()) {
-            for (i in news) {
+            var counter = 0
+             for (i in news) {
                 val newsTitle = TextView(context)
                 val newsContent = TextView(context)
                 val newsStatus = TextView(context)
+                val visibilityStatus = TextView(context)
                 val changeVisibility = Button(context)
                 val newsItem = i.value
                 newsTitle.text = "".plus(String.format("%s%n", newsItem.title))
@@ -92,16 +95,21 @@ class NotificationsFragment : Fragment() {
                 newsContent.textSize = 20.23F
                 newsStatus.text = "".plus(String.format("%s%n", STATUSES[newsItem.visibilityId]))
                 newsStatus.textSize = 20.23F
+                visibilityStatus.text = "".plus(String.format("%s%n%n%n%n", STATUSES[newsItem.visibilityId]))
+                visibilityStatus.textSize = 30.23F
                 newsLayout.addView(newsTitle)
                 newsLayout.addView(newsContent)
                 newsLayout.addView(newsStatus)
                 if (role == "1") {
-                    root.news_status_visibility_now.text = STATUSES[newsItem.visibilityId]
                     changeVisibility.text = "изменить видимость"
                     changeVisibility.textSize = 15.23F
                     changeVisibility.width = 15
                     changeVisibility.id = newsItem.id
                     newsLayout.addView(changeVisibility)
+                    if (counter == 0) {
+                        changeVisibilityLayout.addView(visibilityStatus)
+                        counter++
+                    }
                     changeVisibility.setOnClickListener() {
 //                        root.change_news_visibility_layout.visibility = View.VISIBLE
 //                        root.root_layout.visibility = View.GONE
