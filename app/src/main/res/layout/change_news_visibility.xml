@@ -13,35 +13,51 @@
             android:textStyle="bold"/>
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="485dp"
-            android:layout_centerInParent="true"
+            android:layout_height="81dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            tools:ignore="MissingConstraints">
+            tools:ignore="MissingConstraints"
+    >
         <Button
                 android:id="@+id/news_show_students"
-                android:layout_height="74dp"
-                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15sp"
                 android:text="всем ученикам"
         />
         <Button
                 android:id="@+id/news_show_teachers"
-                android:layout_height="63dp"
-                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15sp"
                 android:text="учителям"
+        />
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="328dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints"
+    >
+        <Button
+                android:id="@+id/news_show_all"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13sp"
+                android:text="моим ученикам"
         />
         <Button
                 android:id="@+id/news_show_my_students"
-                android:layout_height="63dp"
-                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15sp"
                 android:text="всем"
         />
-        <Button
-                android:id="@+id/news_show_all"
-                android:layout_height="96dp"
-                android:layout_width="100dp"
-                android:text="моим ученикам"
-        />
     </LinearLayout>
-
 </LinearLayout>
