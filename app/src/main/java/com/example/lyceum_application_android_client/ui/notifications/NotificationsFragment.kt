@@ -83,42 +83,52 @@ class NotificationsFragment : Fragment() {
             for (i in news) {
                 val newsTitle = TextView(context)
                 val newsContent = TextView(context)
+                val newsStatus = TextView(context)
                 val changeVisibility = Button(context)
                 val newsItem = i.value
                 newsTitle.text = "".plus(String.format("%s%n", newsItem.title))
                 newsTitle.textSize = 35.23F
                 newsContent.text = "".plus(String.format("%s%n%s%n%n", newsItem.message, newsItem.creationTime))
                 newsContent.textSize = 20.23F
+                newsStatus.text = "".plus(String.format("%s%n", STATUSES[newsItem.visibilityId]))
+                newsStatus.textSize = 20.23F
                 newsLayout.addView(newsTitle)
                 newsLayout.addView(newsContent)
+                newsLayout.addView(newsStatus)
                 if (role == "1") {
-                    changeVisibility.text = "изменить видимость".plus(newsItem.visibilityId)
+                    root.news_status_visibility_now.text = STATUSES[newsItem.visibilityId]
+                    changeVisibility.text = "изменить видимость"
                     changeVisibility.textSize = 15.23F
                     changeVisibility.width = 15
                     changeVisibility.id = newsItem.id
                     newsLayout.addView(changeVisibility)
                     changeVisibility.setOnClickListener() {
-                        root.change_news_visibility_layout.visibility = View.VISIBLE
-                        root.root_layout.visibility = View.GONE
-                        root.add_news_button.visibility = View.GONE
+//                        root.change_news_visibility_layout.visibility = View.VISIBLE
+//                        root.root_layout.visibility = View.GONE
+//                        root.add_news_button.visibility = View.GONE
+                        showButtons(root)
                         Log.d("TAG", changeVisibility.id.toString())
                         visible_g = changeVisibility.id.toString()
                     }
                     root.news_show_all.setOnClickListener() {
                         handler.updateNewsVisibility(visible_g, "1")
                         Log.d("TAG", visible_g)
+                        hideButtons(root)
                     }
                     root.news_show_teachers.setOnClickListener() {
                         handler.updateNewsVisibility(visible_g, "2")
                         Log.d("TAG", visible_g)
+                        hideButtons(root)
                     }
                     root.news_show_students.setOnClickListener() {
                         handler.updateNewsVisibility(visible_g, "3")
                         Log.d("TAG", visible_g)
+                        hideButtons(root)
                     }
                     root.news_show_my_students.setOnClickListener() {
                         handler.updateNewsVisibility(visible_g, "4")
                         Log.d("TAG", visible_g)
+                        hideButtons(root)
                     }
                 }
             }
@@ -150,5 +160,24 @@ class NotificationsFragment : Fragment() {
         val imm: InputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+    fun showButtons(root: View) {
+        root.change_news_visibility_layout.visibility = View.VISIBLE
+        root.root_layout.visibility = View.GONE
+        root.add_news_button.visibility = View.GONE
+    }
+
+    fun hideButtons(root: View) {
+        root.change_news_visibility_layout.visibility = View.GONE
+        root.root_layout.visibility = View.VISIBLE
+        root.add_news_button.visibility = View.VISIBLE
+        val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) {
+            transaction.setReorderingAllowed(false)
+        }
+        transaction.detach(this).attach(this).commit()
+    }
+
+    private val STATUSES = mutableMapOf<String, String>("1" to "Всем", "2" to "Учителям", "3" to "Ученникам", "4" to "Ученникам класса")
 }
 
