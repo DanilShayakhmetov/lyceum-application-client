@@ -3,7 +3,9 @@ package com.example.lyceum_application_android_client.ui.notifications
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +13,17 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.example.lyceum_application_android_client.DatabaseHelper
+import com.example.lyceum_application_android_client.MainActivity
 import com.example.lyceum_application_android_client.R
 import com.example.lyceum_application_android_client.SessionManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.lyceum_application_android_client.models.News
 import kotlinx.android.synthetic.main.add_news.view.*
 import kotlinx.android.synthetic.main.change_news_visibility.view.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.*
-import android.util.Log
-import com.example.lyceum_application_android_client.models.News
 
 
 class NotificationsFragment : Fragment() {
@@ -70,9 +70,14 @@ class NotificationsFragment : Fragment() {
                 root.add_news_layout.visibility = View.GONE
                 addNews(root, name, classId, role)
                 hideKeyboardFrom(context, root)
-
+                val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+                if (Build.VERSION.SDK_INT >= 26) {
+                    transaction.setReorderingAllowed(false)
+                }
+                transaction.detach(this).attach(this).commit()
             }
         }
+
 
         if (news.isNotEmpty()) {
             for (i in news) {
